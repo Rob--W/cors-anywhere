@@ -12,12 +12,15 @@ The package also includes a Procfile, to run the app on Heroku. More information
 Heroku can be found at https://devcenter.heroku.com/articles/nodejs.
 
 ## Example
+
 ```javascript
 var host = '127.0.0.1';
 var port = 8080;
 
 var cors_proxy = require("cors-anywhere");
-cors_proxy.createServer().listen(port, host, function() {
+cors_proxy.createServer({
+    xRequestedWith: true
+}).listen(port, host, function() {
     console.log('Running CORS Anywhere on ' + host + ':' + port);
 });
 ```
@@ -30,7 +33,36 @@ Request examples:
 * http://localhost:8080/favicon.ico - Replies 404 Not found
 
 
+## Documentation
+
+The module exports two properties: `getHandler` and `createServer`.
+
+* `getHandler(options)` returns a handler which implements the routing logic.
+  This handler is used by [http-proxy](https://github.com/nodejitsu/node-http-proxy).
+* `createServer(options)` creates a server with the default handler.
+
+The following options are recognized by both methods:
+* boolean `withCredentials` - If true, [user credentials](http://www.w3.org/TR/cors/#user-credentials)
+  such as cookies are accepted in the request. It's recommended to set this flag to `false`, because
+  cookies ought not to be leaked to other domains. If you want to use `withCredentials`, make sure that
+  you implement cookie parsing and transforming so that the `path` flag of the cookie is set correctly.
+* string `requireHeader`` - If set, the request must include this header or the API will refuse to proxy.
+  Recommended if you want to prevent users from using the proxy for browsing. Example: `X-Requested-With`
+* array of lowercase strings `removeHeaders` - Exclude certain headers from being included in the request.
+  Example: `["cookie"]`
+
+`createServer` recognizes the following option as well:
+
+* `httpProxyOptions` - Options for http-proxy. The documentation for these options can be found [here](https://github.com/nodejitsu/node-http-proxy#options).
+
+
+## Dependencies
+
+- NodeJitsu's [http-proxy](https://github.com/nodejitsu/node-http-proxy)
+
+
 ## License
+
 Copyright (C) 2013 Rob W <gwnRob@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
