@@ -5,8 +5,10 @@ part of the proxied URI is optional, and defaults to "http". If port 443 is spec
 the protocol defaults to "https".
 
 This package does not put any restrictions on the http methods or headers, except for
-cookies. Credentials are disabled by default, because leaking cookies between different
-domains is insecure.
+cookies. Requesting [user credentials](http://www.w3.org/TR/cors/#user-credentials) is disallowed.
+
+Redirects are not automatically followed. Instead, the server replies with http status code 333 and
+includes an absolute URL in the `location` response header.
 
 The package also includes a Procfile, to run the app on Heroku. More information about
 Heroku can be found at https://devcenter.heroku.com/articles/nodejs.
@@ -21,7 +23,6 @@ var port = process.env.PORT || 8080;
 var cors_proxy = require("cors-anywhere");
 cors_proxy.createServer({
     requireHeader: 'x-requested-with',
-    withCredentials: false,
     removeHeaders: ['cookie', 'cookie2']
 }).listen(port, host, function() {
     console.log('Running CORS Anywhere on ' + host + ':' + port);
@@ -30,11 +31,11 @@ cors_proxy.createServer({
 ```
 Request examples:
 
-* http://localhost:8080/http://google.com/ - Google.com with CORS headers
-* http://localhost:8080/google.com - Same as previous.
-* http://localhost:8080/google.com:443 - Proxies https://google.com/
-* http://localhost:8080/ - Shows usage text, as defined in `libs/help.txt`
-* http://localhost:8080/favicon.ico - Replies 404 Not found
+* `http://localhost:8080/http://google.com/` - Google.com with CORS headers
+* `http://localhost:8080/google.com` - Same as previous.
+* `http://localhost:8080/google.com:443` - Proxies https://google.com/
+* `http://localhost:8080/` - Shows usage text, as defined in `libs/help.txt`
+* `http://localhost:8080/favicon.ico` - Replies 404 Not found
 
 Live examples:
 
@@ -50,10 +51,6 @@ The module exports two properties: `getHandler` and `createServer`.
 * `createServer(options)` creates a server with the default handler.
 
 The following options are recognized by both methods:
-* boolean `withCredentials` - If true, [user credentials](http://www.w3.org/TR/cors/#user-credentials)
-  such as cookies are accepted in the request. It's recommended to set this flag to `false`, because
-  cookies ought not to be leaked to other domains. If you want to use `withCredentials`, make sure that
-  you implement cookie parsing and transforming so that the `path` flag of the cookie is set correctly.
 * string `requireHeader`` - If set, the request must include this header or the API will refuse to proxy.
   Recommended if you want to prevent users from using the proxy for browsing. Example: `X-Requested-With`
 * array of lowercase strings `removeHeaders` - Exclude certain headers from being included in the request.

@@ -6,7 +6,18 @@ Usage:
 /iscorsneeded   This is the only resource on this host which is served without CORS headers.
 /<url>          Create a request to <url>, and includes CORS headers in the response.
 
-The protocol can be omitted. It defaults to http:, unless port 443 is specified.
+If the protocol is omitted, it defaults to http (https if port 443 is specified).
+
+Cookies are disabled and stripped from requests.
+
+Redirects are not automatically followed: The API response has status code 333.
+The client ought to confirm this redirection by creating a new request.
+
+The requested URL is available in the X-Request-URL response header. Non-existence of this
+header implies that the requested URL was not recognized.
+
+This API has one requirement: The X-Requested-With header must be set.
+
 
 Demo        :   http://rob.lekensteyn.nl/cors-anywhere.html
 Source code :   https://github.com/Rob--W/cors-anywhere/
