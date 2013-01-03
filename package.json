@@ -1,0 +1,13 @@
+{
+  "name": "cors-anywhere",
+  "version": "0.1.0",
+  "description": "Proxies requests and adds the necessary CORS headers to it. URL is parsed from the path.",
+  "license": "MIT",
+  "author": {
+      "name": "Rob W",
+      "email": "gwnRob@gmail.com"
+  },
+  "dependencies": {
+    "http-proxy": "~0.8"
+  }
+}

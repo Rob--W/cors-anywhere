@@ -1,0 +1,8 @@
+Usage:
+
+/               Shows help
+/iscorsneeded   This is the only resource on this host which is served without CORS headers.
+/<url>          Create a request to <url>, and includes CORS headers in the response.
+
+The protocol can be omitted. It defaults to http:, unless port 443 is specified.
+
