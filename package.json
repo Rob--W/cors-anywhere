@@ -1,12 +1,20 @@
 {
   "name": "cors-anywhere",
   "version": "0.1.0",
-  "description": "Proxies requests and adds the necessary CORS headers to it. URL is parsed from the path.",
+  "description": "Adds CORS headers to any request by acting as a http-proxy. The URL is parsed from the path.",
   "license": "MIT",
-  "author": {
-      "name": "Rob W",
-      "email": "gwnRob@gmail.com"
+  "author": "Rob W <gwnRob@gmail.com>",
+  "repository": {
+      "type": "git",
+      "url": "https://github.com/Rob--W/cors-anywhere.git"
   },
+  "keywords": [
+      "cors",
+      "cross-domain",
+      "http-proxy",
+      "proxy",
+      "heroku"
+  ],
   "dependencies": {
     "http-proxy": "~0.8"
   },
