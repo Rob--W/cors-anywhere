@@ -1,3 +1,5 @@
+This API enables cross-origin requests to anywhere.
+
 Usage:
 
 /               Shows help
@@ -6,3 +8,5 @@ Usage:
 
 The protocol can be omitted. It defaults to http:, unless port 443 is specified.
 
+Demo        :   http://rob.lekensteyn.nl/cors-anywhere.html
+Source code :   https://github.com/Rob--W/cors-anywhere/

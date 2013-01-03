@@ -14,15 +14,19 @@ Heroku can be found at https://devcenter.heroku.com/articles/nodejs.
 ## Example
 
 ```javascript
-var host = '127.0.0.1';
-var port = 8080;
+// Heroku defines the environment variable PORT, and requires the binding address to be 0.0.0.0
+var host = process.env.PORT ? '0.0.0.0' : '127.0.0.1';
+var port = process.env.PORT || 8080;
 
 var cors_proxy = require("cors-anywhere");
 cors_proxy.createServer({
-    xRequestedWith: true
+    requireHeader: 'x-requested-with',
+    withCredentials: false,
+    removeHeaders: ['cookie', 'cookie2']
 }).listen(port, host, function() {
     console.log('Running CORS Anywhere on ' + host + ':' + port);
 });
+
 ```
 Request examples:
 
@@ -32,6 +36,10 @@ Request examples:
 * http://localhost:8080/ - Shows usage text, as defined in `libs/help.txt`
 * http://localhost:8080/favicon.ico - Replies 404 Not found
 
+Live examples:
+
+* http://cors-anywhere.herokuapp.com/
+* http://rob.lekensteyn.nl/cors-anywhere.html
 
 ## Documentation
 
