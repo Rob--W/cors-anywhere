@@ -11,7 +11,8 @@ If the protocol is omitted, it defaults to http (https if port 443 is specified)
 Cookies are disabled and stripped from requests.
 
 Redirects are not automatically followed: The API response has status code 333.
-The client ought to confirm this redirection by creating a new request.
+The client ought to confirm this redirection by creating a new request (the url
+is available in the Location response header).
 
 The requested URL is available in the X-Request-URL response header. Non-existence of this
 header implies that the requested URL was not recognized.

@@ -8,7 +8,7 @@ This package does not put any restrictions on the http methods or headers, excep
 cookies. Requesting [user credentials](http://www.w3.org/TR/cors/#user-credentials) is disallowed.
 
 Redirects are not automatically followed. Instead, the server replies with http status code 333 and
-includes an absolute URL in the `location` response header.
+includes an absolute URL in the `Location` response header.
 
 The package also includes a Procfile, to run the app on Heroku. More information about
 Heroku can be found at https://devcenter.heroku.com/articles/nodejs.
