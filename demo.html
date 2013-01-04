@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Demo of CORS Anywhere</title>
+<meta name="viewport" content="width=device-width">
+<style>
+html, body {
+  margin: 0;
+  height: 100%;
+  padding: 3px;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+}
+* {
+  -moz-box-sizing: border-box;
+       box-sizing: border-box;
+}
+label { display: block; }
+input {
+  display: block;
+  width: 100%;
+  padding: 8px 5px;
+  border: 1px solid #CCC;
+}
+button {
+  display: inline-block;
+  width: 49%;
+  padding: 8px;
+}
+textarea {
+  width: 100%;
+  height: 100%;
+}
+#top {
+  height: 180px;
+  position: relative;
+
+}
+#bottom {
+  height: 100%;
+  margin-top: -180px;
+  padding-top: 180px;
+}
+</style>
+</head>
+<body>
+<div id="top">
+  CORS Anywhere demo &bull; <a href="https://github.com/Rob--W/cors-anywhere/">Github</a> &bull; <a href="http://cors-anywhere.herokuapp.com">Live server</a>.
+  <label>
+    Url to be fetched
+    <input type="url" id="url">
+  </label>
+  <label>
+    If using POST, enter the  data:
+    <input type="text" id="data">
+  </label>
+  <label>
+    <button id="get">GET</button><button id="post">POST</button>
+  </label>
+</div>
+<div id="bottom">
+  <textarea id="output"></textarea>
+</div>
+
+<script>
+  var cors_api_url = 'http://cors-anywhere.herokuapp.com/';
+  function doCORSRequest(options) {
+    var x = new XMLHttpRequest();
+    x.open(options.method, cors_api_url + options.url);
+    x.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+  
+    x.onload = function() {
+      if (x.status === 333) {
+        var url = x.getResponseHeader('Location');
+        if (url) {
+          doCORSRequest({
+            method: 'GET',
+            url: url,
+            success: success,
+            error: options.error
+          });
+        } else {
+          options.error(options, x.status, x.statusText);
+        }
+      } else if (x.status >= 200 && x.status < 300 || x.status === 304) {
+        options.success(options, x.status, x.statusText, x.responseText);
+      } else {
+        options.error(options, x.status, x.statusText);
+      }
+    };
+    x.onerror = function() {
+      options.error(options, x.status, x.statusText);
+    };
+    x.send(options.data);
+  }
+
+  // Bind event
+  (function() {
+    var urlField = document.getElementById('url');
+    var dataField = document.getElementById('data');
+    var outputField = document.getElementById('output');
+    document.getElementById('get').onclick = function() {
+      doCORSRequest({
+        method: 'GET',
+        url: urlField.value,
+        success: onSuccess,
+        error: onError
+      });
+    };
+    document.getElementById('post').onclick = function() {
+      doCORSRequest({
+        method: 'POST',
+        url: urlField.value,
+        data: dataField.value,
+        success: onSuccess,
+        error: onError
+      });
+    };
+    function onSuccess(options, statusCode, statusText, responseText) {
+      outputField.value = options.method + ' ' + options.url + '\n' + statusCode + ' ' + statusText + '\n\n' + responseText;
+
+    }
+    function onError(options, statusCode, statusText) {
+      outputField.value = options.method + ' ' + options.url + '\n' + statusCode + ' ' + statusText;
+    }
+  })();
+</script>
+</body>
+</html>
