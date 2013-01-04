@@ -1,0 +1,7 @@
+*.swp
+*.kate-swp
+*.tmp
+*.log
+
+del/
+node_modules/
