@@ -48,11 +48,11 @@ textarea {
 <div id="top">
   CORS Anywhere demo &bull; <a href="https://github.com/Rob--W/cors-anywhere/">Github</a> &bull; <a href="http://cors-anywhere.herokuapp.com">Live server</a>.
   <label>
-    Url to be fetched
-    <input type="url" id="url">
+    Url to be fetched (example: <a href="//rob.lekensteyn.nl/dump.php">rob.lekensteyn.nl/dump.php</a>)
+    <input type="url" id="url" value="">
   </label>
   <label>
-    If using POST, enter the  data:
+    If using POST, enter the data:
     <input type="text" id="data">
   </label>
   <label>
@@ -77,7 +77,7 @@ textarea {
           doCORSRequest({
             method: 'GET',
             url: url,
-            success: success,
+            success: options.success,
             error: options.error
           });
         } else {
@@ -100,7 +100,8 @@ textarea {
     var urlField = document.getElementById('url');
     var dataField = document.getElementById('data');
     var outputField = document.getElementById('output');
-    document.getElementById('get').onclick = function() {
+    document.getElementById('get').onclick = function(e) {
+      e.preventDefault();
       doCORSRequest({
         method: 'GET',
         url: urlField.value,
@@ -108,7 +109,8 @@ textarea {
         error: onError
       });
     };
-    document.getElementById('post').onclick = function() {
+    document.getElementById('post').onclick = function(e) {
+      e.preventDefault();
       doCORSRequest({
         method: 'POST',
         url: urlField.value,
