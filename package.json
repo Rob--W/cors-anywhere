@@ -1,7 +1,7 @@
 {
   "name": "cors-anywhere",
   "version": "0.1.1",
-  "description": "Adds CORS headers to any request by acting as a http-proxy. The URL is parsed from the path.",
+  "description": "CORS Anywhere is a reverse proxy which adds CORS headers to the proxied request. Request URL is taken from the path", 
   "license": "MIT",
   "author": "Rob W <gwnRob@gmail.com>",
   "repository": {
