@@ -64,22 +64,31 @@ textarea {
 </div>
 
 <script>
-  var cors_api_url = 'http://cors-anywhere.herokuapp.com/';
-  function doCORSRequest(options) {
+  var cors_api_url = 'http://cors-anywhere.herokuapp.com/'; // https is also supported
+  function doCORSRequest(options, redirectCount) {
     var x = new XMLHttpRequest();
     x.open(options.method, cors_api_url + options.url);
     x.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
   
     x.onload = function() {
       if (x.status === 333) {
+        redirectCount = +redirectCount ? +redirectCount + 1 : 1;
         var url = x.getResponseHeader('Location');
-        if (url) {
-          doCORSRequest({
-            method: 'GET',
-            url: url,
-            success: options.success,
-            error: options.error
-          });
+        if (url && redirectCount <= 5) {
+          var originalStatus = +/\d+/.exec(x.statusText);
+          if (originalStatus === 307 || originalStatus === 308) {
+            // Correctly deal with method-preserving redirects
+            options.url = url;
+            doCORSRequest(options, redirectCount);
+          } else {
+            // Otherwise just change to GET
+            doCORSRequest({
+              method: 'GET',
+              url: url,
+              success: options.success,
+              error: options.error
+            }, redirectCount);
+          }
         } else {
           options.error(options, x.status, x.statusText);
         }
