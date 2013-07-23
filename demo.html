@@ -48,7 +48,7 @@ textarea {
 <div id="top">
   CORS Anywhere demo &bull; <a href="https://github.com/Rob--W/cors-anywhere/">Github</a> &bull; <a href="http://cors-anywhere.herokuapp.com">Live server</a>.
   <label>
-    Url to be fetched (example: <a href="//rob.lekensteyn.nl/dump.php">rob.lekensteyn.nl/dump.php</a>)
+    Url to be fetched (example: <a href="//robwu.nl/dump.php">robwu.nl/dump.php</a>)
     <input type="url" id="url" value="">
   </label>
   <label>
@@ -64,7 +64,8 @@ textarea {
 </div>
 
 <script>
-  var cors_api_url = 'http://cors-anywhere.herokuapp.com/'; // https is also supported
+  var protocol = location.protocol === 'http:' ? 'http:' : 'https:';
+  var cors_api_url = protocol + '//cors-anywhere.herokuapp.com/';
   function doCORSRequest(options, redirectCount) {
     var x = new XMLHttpRequest();
     x.open(options.method, cors_api_url + options.url);
@@ -73,9 +74,10 @@ textarea {
     x.onload = function() {
       if (x.status === 333) {
         redirectCount = +redirectCount ? +redirectCount + 1 : 1;
-        var url = x.getResponseHeader('Location');
-        if (url && redirectCount <= 5) {
-          var originalStatus = +/\d+/.exec(x.statusText);
+        var redirectInfo = /^(\d+) (.*)$/.exec(x.statusText);
+        if (redirectInfo && redirectCount <= 5) {
+          var originalStatus = +redirectInfo[1];
+          var url = redirectInfo[2];
           if (originalStatus === 307 || originalStatus === 308) {
             // Correctly deal with method-preserving redirects
             options.url = url;

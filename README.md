@@ -41,11 +41,17 @@ Request examples:
 
 Live examples:
 
-* http://cors-anywhere.herokuapp.com/
-* http://rob.lekensteyn.nl/cors-anywhere.html - This demo shows how to use the API.
+* https://cors-anywhere.herokuapp.com/
+* https://robwu.nl/cors-anywhere.html - This demo shows how to use the API.
   Includes a redirect handler (including loop detection) and shows that the POST also works.
 
 ## Documentation
+
+### Client
+
+Learn how to use the API in a web app by viewing the source code of [demo.html](demo.html) and reading [lib/help.txt](lib/help.txt).
+
+### Server
 
 The module exports two properties: `getHandler` and `createServer`.
 
@@ -71,7 +77,7 @@ The following options are recognized by both methods:
 
 ## License
 
-Copyright (C) 2013 Rob W <gwnRob@gmail.com>
+Copyright (C) 2013 Rob Wu <gwnRob@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
