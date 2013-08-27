@@ -10,13 +10,6 @@ If the protocol is omitted, it defaults to http (https if port 443 is specified)
 
 Cookies are disabled and stripped from requests.
 
-Redirects are not automatically followed: The API response has status code 333.
-The client ought to confirm this redirection by creating a new request (the url
-is available in the Location response header).
-For user agents who do not support the Access-Control-Expose-Headers response header,
-the information is available in the status text as "<HTTP STATUS CODE> <LOCATION HEADER>".
-
-
 The requested URL is available in the X-Request-URL response header. Non-existence of this
 header implies that the requested URL was not recognized.
 
@@ -25,5 +18,6 @@ or the X-Requested-With header to be set. To avoid unnecessary preflight (OPTION
 it's recommended to not manually set these headers in your code.
 
 
-Demo        :   https://robwu.nl/cors-anywhere.html
-Source code :   https://github.com/Rob--W/cors-anywhere/
+Demo          :   https://robwu.nl/cors-anywhere.html
+Source code   :   https://github.com/Rob--W/cors-anywhere/
+Documentation :   https://github.com/Rob--W/cors-anywhere/#documentation

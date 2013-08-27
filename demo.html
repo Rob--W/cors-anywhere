@@ -66,34 +66,13 @@ textarea {
 <script>
   var protocol = location.protocol === 'http:' ? 'http:' : 'https:';
   var cors_api_url = protocol + '//cors-anywhere.herokuapp.com/';
+  var cors_api_redirect_cache = {};
   function doCORSRequest(options, redirectCount) {
     var x = new XMLHttpRequest();
     x.open(options.method, cors_api_url + options.url);
   
     x.onload = function() {
-      if (x.status === 333) {
-        redirectCount = +redirectCount ? +redirectCount + 1 : 1;
-        var redirectInfo = /^(\d+) (.*)$/.exec(x.statusText);
-        if (redirectInfo && redirectCount <= 5) {
-          var originalStatus = +redirectInfo[1];
-          var url = redirectInfo[2];
-          if (originalStatus === 307 || originalStatus === 308) {
-            // Correctly deal with method-preserving redirects
-            options.url = url;
-            doCORSRequest(options, redirectCount);
-          } else {
-            // Otherwise just change to GET
-            doCORSRequest({
-              method: 'GET',
-              url: url,
-              success: options.success,
-              error: options.error
-            }, redirectCount);
-          }
-        } else {
-          options.error(options, x.status, x.statusText);
-        }
-      } else if (x.status >= 200 && x.status < 300 || x.status === 304) {
+      if (x.status >= 200 && x.status < 300 || x.status === 304) {
         options.success(options, x.status, x.statusText, x.responseText);
       } else {
         options.error(options, x.status, x.statusText);

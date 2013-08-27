@@ -9,9 +9,6 @@ cookies. Requesting [user credentials](http://www.w3.org/TR/cors/#user-credentia
 The app can be configured to require a header for proxying a request, for example to avoid
 a direct visit from the browser.
 
-Redirects are not automatically followed. Instead, the server replies with http status code 333 and
-includes an absolute URL in the `Location` response header.
-
 The package also includes a Procfile, to run the app on Heroku. More information about
 Heroku can be found at https://devcenter.heroku.com/articles/nodejs.
 
@@ -43,13 +40,45 @@ Live examples:
 
 * https://cors-anywhere.herokuapp.com/
 * https://robwu.nl/cors-anywhere.html - This demo shows how to use the API.
-  Includes a redirect handler (including loop detection) and shows that the POST also works.
 
 ## Documentation
 
 ### Client
 
-Learn how to use the API in a web app by viewing the source code of [demo.html](demo.html) and reading [lib/help.txt](lib/help.txt).
+To use the API, just prefix the URL with the API URL. Take a look at [demo.html](demo.html) for an example.
+A concise summary of the documentation is provided at [lib/help.txt](lib/help.txt).
+
+If you want to automatically enable cross-domain requests when needed, use the following snippet:
+
+```javascript
+(function() {
+    var cors_api_host = 'cors-anywhere.herokuapp.com/';
+    var cors_api_url = (window.location.protocol === 'http:' ? 'http://' : 'https://') + cors_api_host;
+    var slice = [].slice;
+    var origin = window.location.protocol + '//' + window.location.host;
+    var open = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function() {
+        var args = slice.call(arguments);
+        var targetOrigin = /^https?:\/\/([^\/]+)/i.exec(args[1]);
+        if (targetOrigin && targetOrigin[0].toLowerCase() !== origin &&
+            targetOrigin[1] !== cors_api_host) {
+            args[1] = cors_api_url + args[1];
+        }
+        return open.apply(this, args);
+    };
+})();
+```
+
+If you're using jQuery, you can also use the following code **instead of** the previous one:
+
+```javascript
+jQuery.ajaxPrefilter(function(options) {
+    if (options.crossDomain && jQuery.support.cors) {
+      options.url = (window.location.protocol === 'http:' ? 'http:' : 'https:') +
+                    '//cors-anywhere.herokuapp.com/' + options.url;
+    }
+});
+```
 
 ### Server
 
@@ -60,9 +89,11 @@ The module exports two properties: `getHandler` and `createServer`.
 * `createServer(options)` creates a server with the default handler.
 
 The following options are recognized by both methods:
-* array of strings `requireHeader` - If set, the request must include this header or the API will refuse to proxy.
-  Recommended if you want to prevent users from using the proxy for normal browsing. Example: `['Origin', 'X-Requested-With']`.
-* array of lowercase strings `removeHeaders` - Exclude certain headers from being included in the request.
+
+* array of strings `requireHeader` - If set, the request must include this header or the API will refuse to proxy.  
+  Recommended if you want to prevent users from using the proxy for normal browsing.  
+  Example: `['Origin', 'X-Requested-With']`.
+* array of lowercase strings `removeHeaders` - Exclude certain headers from being included in the request.  
   Example: `["cookie"]`
 
 `createServer` recognizes the following option as well:
