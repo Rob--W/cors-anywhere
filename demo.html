@@ -69,7 +69,6 @@ textarea {
   function doCORSRequest(options, redirectCount) {
     var x = new XMLHttpRequest();
     x.open(options.method, cors_api_url + options.url);
-    x.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
   
     x.onload = function() {
       if (x.status === 333) {

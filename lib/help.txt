@@ -20,7 +20,9 @@ the information is available in the status text as "<HTTP STATUS CODE> <LOCATION
 The requested URL is available in the X-Request-URL response header. Non-existence of this
 header implies that the requested URL was not recognized.
 
-This API has one requirement: The X-Requested-With header must be set.
+To prevent the use of the proxy for casual browsing, the API requires either the Origin
+or the X-Requested-With header to be set. To avoid unnecessary preflight (OPTIONS) requests,
+it's recommended to not manually set these headers in your code.
 
 
 Demo        :   https://robwu.nl/cors-anywhere.html

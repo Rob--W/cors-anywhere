@@ -22,9 +22,9 @@ Heroku can be found at https://devcenter.heroku.com/articles/nodejs.
 var host = process.env.PORT ? '0.0.0.0' : '127.0.0.1';
 var port = process.env.PORT || 8080;
 
-var cors_proxy = require("cors-anywhere");
+var cors_proxy = require('cors-anywhere');
 cors_proxy.createServer({
-    requireHeader: 'x-requested-with',
+    requireHeader: ['origin', 'x-requested-with'],
     removeHeaders: ['cookie', 'cookie2']
 }).listen(port, host, function() {
     console.log('Running CORS Anywhere on ' + host + ':' + port);
@@ -60,8 +60,8 @@ The module exports two properties: `getHandler` and `createServer`.
 * `createServer(options)` creates a server with the default handler.
 
 The following options are recognized by both methods:
-* string `requireHeader` - If set, the request must include this header or the API will refuse to proxy.
-  Recommended if you want to prevent users from using the proxy for browsing. Example: `X-Requested-With`
+* array of strings `requireHeader` - If set, the request must include this header or the API will refuse to proxy.
+  Recommended if you want to prevent users from using the proxy for normal browsing. Example: `['Origin', 'X-Requested-With']`.
 * array of lowercase strings `removeHeaders` - Exclude certain headers from being included in the request.
   Example: `["cookie"]`
 
