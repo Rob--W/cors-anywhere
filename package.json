@@ -23,6 +23,9 @@
   "dependencies": {
     "http-proxy": "~0.10"
   },
+  "devDependencies": {
+      "node-webkit-agent": "~0.1.2"
+  },
   "engines": {
     "node": ">=0.6.6",
     "npm": ">=1.1.0"
