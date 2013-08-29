@@ -11,11 +11,13 @@ If the protocol is omitted, it defaults to http (https if port 443 is specified)
 Cookies are disabled and stripped from requests.
 
 Redirects are automatically followed. For debugging purposes, each followed redirect results
-in the addition of a X-CORS-Redirect-n header, where n starts at 1. This header is not
+in the addition of a X-CORS-Redirect-n header, where n starts at 1. These headers are not
 accessible by the XMLHttpRequest API.
+After 5 redirects, redirects are not followed any more. The redirect response is sent back
+to the browser, which can choose to follow the redirect (handled automatically by the browser).
 
-The final request URL is available in the X-Request-URL response header. Non-existence of
-this header implies that the requested URL was not recognized.
+The requested URL is available in the X-Request-URL response header.
+The final URL, after following all redirects, is available in the X-Final-URL response header.
 
 
 To prevent the use of the proxy for casual browsing, the API requires either the Origin
