@@ -52,8 +52,8 @@ If you want to automatically enable cross-domain requests when needed, use the f
 
 ```javascript
 (function() {
-    var cors_api_host = 'cors-anywhere.herokuapp.com/';
-    var cors_api_url = (window.location.protocol === 'http:' ? 'http://' : 'https://') + cors_api_host;
+    var cors_api_host = 'cors-anywhere.herokuapp.com';
+    var cors_api_url = (window.location.protocol === 'http:' ? 'http://' : 'https://') + cors_api_host + '/';
     var slice = [].slice;
     var origin = window.location.protocol + '//' + window.location.host;
     var open = XMLHttpRequest.prototype.open;
