@@ -1,6 +1,6 @@
 {
   "name": "cors-anywhere",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "CORS Anywhere is a reverse proxy which adds CORS headers to the proxied request. Request URL is taken from the path", 
   "license": "MIT",
   "author": "Rob Wu <gwnRob@gmail.com>",
