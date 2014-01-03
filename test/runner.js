@@ -38,7 +38,7 @@ setupRedirectServer(function() {
  *  if the devtools agent is available, omitted otherwise.
  */
 function setupCORSServer(callback) {
-    var child = fork('./sub-server', [host, port]);
+    var child = fork('./sub-server', [host, port], {cwd: __dirname});
     child.on('message', function(message) {
         if (message.hasDevtoolsAgent) {
             callback(function() {
@@ -56,7 +56,7 @@ function setupCORSServer(callback) {
 }
 
 function setupRedirectServer(callback) {
-    var child = fork('./sub-no-cors-server', [host, portServer]);
+    var child = fork('./sub-no-cors-server', [host, portServer], {cwd: __dirname});
     child.once('message', function() {
         callback();
     });
