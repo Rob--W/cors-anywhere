@@ -21,7 +21,8 @@
   ],
   "main": "./lib/cors-anywhere.js",
   "dependencies": {
-    "http-proxy": "1.3.0"
+    "http-proxy": "1.3.0",
+    "eventemitter3": "0.x.x"
   },
   "devDependencies": {
       "webkit-devtools-agent": "~0.2.1"
