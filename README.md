@@ -109,7 +109,7 @@ The following options are recognized by both methods:
 
 ## License
 
-Copyright (C) 2013 - 2014 Rob Wu <rob@robwu.nl>
+Copyright (C) 2013 - 2015 Rob Wu <rob@robwu.nl>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
