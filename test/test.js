@@ -78,6 +78,13 @@ describe('Basic functionality', function() {
       .expect(404, 'Invalid host: robots.txt', done);
   });
 
+  it('GET /http://robots.txt should be proxied', function(done) {
+    request(cors_anywhere)
+      .get('/http://robots.txt')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'this is http://robots.txt', done);
+  });
+
   it('GET /example.com', function(done) {
     request(cors_anywhere)
       .get('/example.com')

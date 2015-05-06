@@ -97,3 +97,7 @@ echoheaders('http://example.com');
 echoheaders('http://example.com:1337');
 echoheaders('https://example.com');
 echoheaders('https://example.com:1337');
+
+nock('http://robots.txt')
+  .get('/')
+  .reply(200, 'this is http://robots.txt');
