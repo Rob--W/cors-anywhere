@@ -4,15 +4,22 @@ var createServer = require('../').createServer;
 var request = require('supertest');
 var path = require('path');
 var fs = require('fs');
+var assert = require('assert');
 
 var helpTextPath = path.join(__dirname, '../lib/help.txt');
 var helpText = fs.readFileSync(helpTextPath, { encoding: 'utf8' });
 
 request.Test.prototype.expectJSON = function(json, done) {
-  return this.expect(200, JSON.stringify(json), done);
+  this.expect(function(res) {
+    // Assume that the response can be parsed as JSON (otherwise it throws).
+    var actual = JSON.parse(res.text);
+    assert.deepEqual(actual, json);
+  });
+  return done ? this.end(done) : this;
 };
 
 var cors_anywhere;
+var cors_anywhere_port;
 function stopServer(done) {
   cors_anywhere.close(function() {
     done();
@@ -22,8 +29,8 @@ function stopServer(done) {
 
 describe('Basic functionality', function() {
   before(function() {
-    // Mostly the default settings from server.js
     cors_anywhere = createServer();
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
   });
   after(stopServer);
 
@@ -219,7 +226,7 @@ describe('Basic functionality', function() {
       .expect('Access-Control-Allow-Origin', '*')
       .expectJSON({
         host: 'example.com',
-        'x-forwarded-port': '80',
+        'x-forwarded-port': String(cors_anywhere_port),
         'x-forwarded-proto': 'http',
       }, done);
   });
@@ -231,7 +238,7 @@ describe('Basic functionality', function() {
       .expect('Access-Control-Allow-Origin', '*')
       .expectJSON({
         host: 'example.com:1337',
-        'x-forwarded-port': '80',
+        'x-forwarded-port': String(cors_anywhere_port),
         'x-forwarded-proto': 'http',
       }, done);
   });
@@ -243,7 +250,7 @@ describe('Basic functionality', function() {
       .expect('Access-Control-Allow-Origin', '*')
       .expectJSON({
         host: 'example.com',
-        'x-forwarded-port': '80',
+        'x-forwarded-port': String(cors_anywhere_port),
         'x-forwarded-proto': 'http',
       }, done);
   });
@@ -281,6 +288,7 @@ describe('server on https', function() {
         cert: fs.readFileSync(path.join(__dirname, 'cert.pem')),
       },
     });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
     // Disable certificate validation in case the certificate expires.
     NODE_TLS_REJECT_UNAUTHORIZED = process.env.NODE_TLS_REJECT_UNAUTHORIZED;
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
@@ -301,7 +309,7 @@ describe('server on https', function() {
       .expect('Access-Control-Allow-Origin', '*')
       .expectJSON({
         host: 'example.com',
-        'x-forwarded-port': '443',
+        'x-forwarded-port': String(cors_anywhere_port),
         'x-forwarded-proto': 'https',
       }, done);
   });
@@ -313,7 +321,7 @@ describe('server on https', function() {
       .expect('Access-Control-Allow-Origin', '*')
       .expectJSON({
         host: 'example.com',
-        'x-forwarded-port': '443',
+        'x-forwarded-port': String(cors_anywhere_port),
         'x-forwarded-proto': 'https',
       }, done);
   });
@@ -325,7 +333,7 @@ describe('server on https', function() {
       .expect('Access-Control-Allow-Origin', '*')
       .expectJSON({
         host: 'example.com:1337',
-        'x-forwarded-port': '443',
+        'x-forwarded-port': String(cors_anywhere_port),
         'x-forwarded-proto': 'https',
       }, done);
   });
@@ -336,6 +344,7 @@ describe('requireHeader', function() {
     cors_anywhere = createServer({
       requireHeader: ['origin', 'x-requested-with'],
     });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
   });
   after(stopServer);
 
@@ -368,6 +377,7 @@ describe('removeHeaders', function() {
     cors_anywhere = createServer({
       removeHeaders: ['cookie', 'cookie2'],
     });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
   });
   after(stopServer);
 
@@ -390,8 +400,8 @@ describe('removeHeaders', function() {
       .set('cookie3', 'c')
       .expect('Access-Control-Allow-Origin', '*')
       .expectJSON({
-        cookie3: 'c',
         host: 'example.com',
+        cookie3: 'c',
       }, done);
   });
 });
@@ -403,6 +413,7 @@ describe('httpProxyOptions.xfwd=false', function() {
         xfwd: false
       }
     });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
   });
   after(stopServer);
 
