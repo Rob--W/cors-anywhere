@@ -59,6 +59,7 @@ nock('http://example.com')
 
   .get('/redirect')
   .reply(302, 'redirecting...', {
+    'header at redirect': 'should not be here',
     'Location': '/redirecttarget'
   })
 

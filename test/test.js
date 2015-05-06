@@ -18,6 +18,15 @@ request.Test.prototype.expectJSON = function(json, done) {
   return done ? this.end(done) : this;
 };
 
+request.Test.prototype.expectNoHeader = function(header, done) {
+  this.expect(function(res) {
+    if (header.toLowerCase() in res.headers) {
+      return 'Unexpected header in response: ' + header;
+    }
+  });
+  return done ? this.end(done) : this;
+};
+
 var cors_anywhere;
 var cors_anywhere_port;
 function stopServer(done) {
@@ -45,12 +54,7 @@ describe('Basic functionality', function() {
   it('GET /iscorsneeded', function(done) {
     request(cors_anywhere)
       .get('/iscorsneeded')
-      .expect(function(res) {
-        if ('access-control-allow-origin' in res.headers) {
-          return 'access-control-allow-origin header should not be set';
-        }
-      })
-      .end(done);
+      .expectNoHeader('access-control-allow-origin', done);
   });
 
   it('GET /example.com:65536', function(done) {
@@ -135,6 +139,7 @@ describe('Basic functionality', function() {
       .expect('x-cors-redirect-1', '302 http://example.com/redirecttarget')
       .expect('x-final-url', 'http://example.com/redirecttarget')
       .expect('access-control-expose-headers', /some header,x-final-url/)
+      .expectNoHeader('header at redirect')
       .expect(200, '', done);
   });
 
@@ -148,6 +153,7 @@ describe('Basic functionality', function() {
       .expect('x-cors-redirect-1', '302 http://example.com/redirecttarget')
       .expect('x-final-url', 'http://example.com/redirecttarget')
       .expect('access-control-expose-headers', /some header,x-final-url/)
+      .expectNoHeader('header at redirect')
       .expect(200, 'redirect target', done);
   });
 
@@ -260,15 +266,8 @@ describe('Basic functionality', function() {
       .get('/example.com/setcookie')
       .expect('Access-Control-Allow-Origin', '*')
       .expect('Set-Cookie3', 'z')
-      .expect(function(res) {
-        if (res.headers['set-cookie']) {
-          return 'set-cookie header was set';
-        }
-        if (res.headers['set-cookie2']) {
-          return 'set-cookie2 header was set';
-        }
-      })
-      .end(done);
+      .expectNoHeader('set-cookie')
+      .expectNoHeader('set-cookie2', done);
   });
 
   it('Proxy error', function(done) {
