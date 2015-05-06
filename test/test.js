@@ -236,6 +236,18 @@ describe('Basic functionality', function() {
       }, done);
   });
 
+  it('X-Forwarded-* headers (https)', function(done) {
+    request(cors_anywhere)
+      .get('/https://example.com/echoheaders')
+      .set('test-include-xfwd', '')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expectJSON({
+        host: 'example.com',
+        'x-forwarded-port': '80',
+        'x-forwarded-proto': 'http',
+      }, done);
+  });
+
   it('Ignore cookies', function(done) {
     request(cors_anywhere)
       .get('/example.com/setcookie')
@@ -273,6 +285,18 @@ describe('server on https', function() {
       process.env.NODE_TLS_REJECT_UNAUTHORIZED = NODE_TLS_REJECT_UNAUTHORIZED;
     }
     stopServer(done);
+  });
+
+  it('X-Forwarded-* headers (http)', function(done) {
+    request(cors_anywhere)
+      .get('/example.com/echoheaders')
+      .set('test-include-xfwd', '')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expectJSON({
+        host: 'example.com',
+        'x-forwarded-port': '443',
+        'x-forwarded-proto': 'https',
+      }, done);
   });
 
   it('X-Forwarded-* headers (https)', function(done) {
