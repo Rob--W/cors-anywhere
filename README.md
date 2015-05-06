@@ -98,6 +98,8 @@ The following options are recognized by both methods:
 `createServer` recognizes the following option as well:
 
 * `httpProxyOptions` - Options for http-proxy. The documentation for these options can be found [here](https://github.com/nodejitsu/node-http-proxy#options).
+* `httpsOptions` - If set, a `https.Server` will be created. The given options are passed to the
+  [`https.createServer`](https://nodejs.org/api/https.html#https_https_createserver_options_requestlistener) method.
 
 
 ## Dependencies

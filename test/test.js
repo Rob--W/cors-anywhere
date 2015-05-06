@@ -236,32 +236,6 @@ describe('Basic functionality', function() {
       }, done);
   });
 
-  // Skipped because x-forwarded-proto == http and port == 80
-  it.skip('X-Forwarded-* headers (https)', function(done) {
-    request(cors_anywhere)
-      .get('/https://example.com/echoheaders')
-      .set('test-include-xfwd', '')
-      .expect('Access-Control-Allow-Origin', '*')
-      .expectJSON({
-        host: 'example.com',
-        'x-forwarded-port': '443',
-        'x-forwarded-proto': 'https',
-      }, done);
-  });
-
-  // Skipped because x-forwarded-proto == http
-  it.skip('X-Forwarded-* headers (https, non-standard port)', function(done) {
-    request(cors_anywhere)
-      .get('/https://example.com:1337/echoheaders')
-      .set('test-include-xfwd', '')
-      .expect('Access-Control-Allow-Origin', '*')
-      .expectJSON({
-        host: 'example.com:1337',
-        'x-forwarded-port': '1337',
-        'x-forwarded-proto': 'https',
-      }, done);
-  });
-
   it('Ignore cookies', function(done) {
     request(cors_anywhere)
       .get('/example.com/setcookie')
@@ -277,7 +251,53 @@ describe('Basic functionality', function() {
       })
       .end(done);
   });
+});
 
+describe('server on https', function() {
+  var NODE_TLS_REJECT_UNAUTHORIZED;
+  before(function() {
+    cors_anywhere = createServer({
+      httpsOptions: {
+        key: fs.readFileSync(path.join(__dirname, 'key.pem')),
+        cert: fs.readFileSync(path.join(__dirname, 'cert.pem')),
+      },
+    });
+    // Disable certificate validation in case the certificate expires.
+    NODE_TLS_REJECT_UNAUTHORIZED = process.env.NODE_TLS_REJECT_UNAUTHORIZED;
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+  });
+  after(function(done) {
+    if (NODE_TLS_REJECT_UNAUTHORIZED === undefined) {
+      delete process.env.NODE_TLS_REJECT_UNAUTHORIZED;
+    } else {
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = NODE_TLS_REJECT_UNAUTHORIZED;
+    }
+    stopServer(done);
+  });
+
+  it('X-Forwarded-* headers (https)', function(done) {
+    request(cors_anywhere)
+      .get('/https://example.com/echoheaders')
+      .set('test-include-xfwd', '')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expectJSON({
+        host: 'example.com',
+        'x-forwarded-port': '443',
+        'x-forwarded-proto': 'https',
+      }, done);
+  });
+
+  it('X-Forwarded-* headers (https, non-standard port)', function(done) {
+    request(cors_anywhere)
+      .get('/https://example.com:1337/echoheaders')
+      .set('test-include-xfwd', '')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expectJSON({
+        host: 'example.com:1337',
+        'x-forwarded-port': '1337',
+        'x-forwarded-proto': 'https',
+      }, done);
+  });
 });
 
 describe('requireHeader', function() {
