@@ -87,6 +87,9 @@ nock('http://example.com')
   .reply(302, 'redirecting ad infinitum...', {
     'Location': '/redirectloop'
   })
+
+  .get('/proxyerror')
+  .replyWithError('throw node')
 ;
 
 echoheaders('http://example.com');

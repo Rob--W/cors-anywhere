@@ -263,6 +263,13 @@ describe('Basic functionality', function() {
       })
       .end(done);
   });
+
+  it('Proxy error', function(done) {
+    request(cors_anywhere)
+      .get('/example.com/proxyerror')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(404, 'Not found because of proxy error: Error: throw node', done);
+  });
 });
 
 describe('server on https', function() {
