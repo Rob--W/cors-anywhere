@@ -231,7 +231,7 @@ describe('Basic functionality', function() {
       .expect('Access-Control-Allow-Origin', '*')
       .expectJSON({
         host: 'example.com:1337',
-        'x-forwarded-port': '1337',
+        'x-forwarded-port': '80',
         'x-forwarded-proto': 'http',
       }, done);
   });
@@ -294,7 +294,7 @@ describe('server on https', function() {
       .expect('Access-Control-Allow-Origin', '*')
       .expectJSON({
         host: 'example.com:1337',
-        'x-forwarded-port': '1337',
+        'x-forwarded-port': '443',
         'x-forwarded-proto': 'https',
       }, done);
   });
