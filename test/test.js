@@ -390,8 +390,8 @@ describe('removeHeaders', function() {
       .set('cookie3', 'c')
       .expect('Access-Control-Allow-Origin', '*')
       .expectJSON({
-        host: 'example.com',
         cookie3: 'c',
+        host: 'example.com',
       }, done);
   });
 });
