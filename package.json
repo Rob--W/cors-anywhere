@@ -29,7 +29,7 @@
     "supertest": "~0.15.0"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha ./test/test.js --reporter spec"
+    "test": "./node_modules/.bin/mocha ./test/test*.js --reporter spec"
   },
   "engines": {
     "node": ">=0.6.6",
