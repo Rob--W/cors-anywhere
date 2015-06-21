@@ -95,6 +95,9 @@ The following options are recognized by both methods:
 * array of lowercase strings `removeHeaders` - Exclude certain headers from being included in the request.  
   Example: `["cookie"]`
 
+* object `enforcedResponseHeaders` - all headers listed here will appears in the response.
+  Example: `{ 'access-control-allow-origin': 'https://localhost:8080' }`
+
 `createServer` recognizes the following option as well:
 
 * `httpProxyOptions` - Options for http-proxy. The documentation for these options can be found [here](https://github.com/nodejitsu/node-http-proxy#options).
