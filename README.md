@@ -21,6 +21,7 @@ var port = process.env.PORT || 8080;
 
 var cors_proxy = require('cors-anywhere');
 cors_proxy.createServer({
+    originWhitelist: [], // Allow all origins
     requireHeader: ['origin', 'x-requested-with'],
     removeHeaders: ['cookie', 'cookie2']
 }).listen(port, host, function() {
@@ -89,6 +90,11 @@ The module exports two properties: `getHandler` and `createServer`.
 
 The following options are recognized by both methods:
 
+* array of strings `originBlacklist` - If set, requests whose origin is listed are blocked.  
+  Example: `['https://bad.example.com', 'http://bad.example.com']`
+* array of strings `originWhitelist` - If set, requests whose origin is not listed are blocked.  
+  If this list is empty, all origins are allowed.
+  Example: `['https://good.example.com', 'http://good.example.com']`
 * array of strings `requireHeader` - If set, the request must include this header or the API will refuse to proxy.  
   Recommended if you want to prevent users from using the proxy for normal browsing.  
   Example: `['Origin', 'X-Requested-With']`.
