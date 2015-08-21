@@ -478,6 +478,26 @@ describe('removeHeaders', function() {
   });
 });
 
+describe('setHeaders', function() {
+  before(function() {
+    cors_anywhere = createServer({
+      setHeaders: {'x-powered-by': 'CORS Anywhere'},
+    });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+  });
+  after(stopServer);
+
+  it('GET /example.com', function(done) {
+    request(cors_anywhere)
+      .get('/example.com/echoheaders')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expectJSON({
+        host: 'example.com',
+        'x-powered-by': 'CORS Anywhere'
+      }, done);
+  });
+});
+
 describe('httpProxyOptions.xfwd=false', function() {
   before(function() {
     cors_anywhere = createServer({

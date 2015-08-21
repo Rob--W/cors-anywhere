@@ -100,6 +100,8 @@ The following options are recognized by both methods:
   Example: `['Origin', 'X-Requested-With']`.
 * array of lowercase strings `removeHeaders` - Exclude certain headers from being included in the request.  
   Example: `["cookie"]`
+* dictionary of lowercase strings `setHeaders` - Set headers for the request (overwrites existing ones).  
+  Example: `{"x-powered-by": "CORS Anywhere"}`
 
 `createServer` recognizes the following option as well:
 
