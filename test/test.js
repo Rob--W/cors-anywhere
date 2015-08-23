@@ -496,6 +496,50 @@ describe('setHeaders', function() {
         'x-powered-by': 'CORS Anywhere'
       }, done);
   });
+
+  it('GET /example.com should replace header', function(done) {
+    request(cors_anywhere)
+      .get('/example.com/echoheaders')
+      .set('x-powered-by', 'should be replaced')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expectJSON({
+        host: 'example.com',
+        'x-powered-by': 'CORS Anywhere'
+      }, done);
+  });
+});
+
+describe('setHeaders + removeHeaders', function() {
+  before(function() {
+    // setHeaders takes precedence over removeHeaders
+    cors_anywhere = createServer({
+      removeHeaders: ['x-powered-by'],
+      setHeaders: {'x-powered-by': 'CORS Anywhere'},
+    });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+  });
+  after(stopServer);
+
+  it('GET /example.com', function(done) {
+    request(cors_anywhere)
+      .get('/example.com/echoheaders')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expectJSON({
+        host: 'example.com',
+        'x-powered-by': 'CORS Anywhere'
+      }, done);
+  });
+
+  it('GET /example.com should replace header', function(done) {
+    request(cors_anywhere)
+      .get('/example.com/echoheaders')
+      .set('x-powered-by', 'should be replaced')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expectJSON({
+        host: 'example.com',
+        'x-powered-by': 'CORS Anywhere'
+      }, done);
+  });
 });
 
 describe('httpProxyOptions.xfwd=false', function() {
