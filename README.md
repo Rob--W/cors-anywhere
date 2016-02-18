@@ -90,6 +90,10 @@ The module exports two properties: `getHandler` and `createServer`.
 
 The following options are recognized by both methods:
 
+* function `getProxyForUrl` - If set, specifies which intermediate proxy to use for a given URL.
+  If the return value is void, a direct request is sent. The default implementation is
+  [`proxy-from-env`](https://github.com/Rob--W/proxy-from-env), which respects the standard proxy
+  environment variables (e.g. `https_proxy`, `no_proxy`, etc.).  
 * array of strings `originBlacklist` - If set, requests whose origin is listed are blocked.  
   Example: `['https://bad.example.com', 'http://bad.example.com']`
 * array of strings `originWhitelist` - If set, requests whose origin is not listed are blocked.  

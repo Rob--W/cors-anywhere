@@ -3,6 +3,7 @@ require('./setup');
 var createServer = require('../').createServer;
 var request = require('supertest');
 var path = require('path');
+var http = require('http');
 var fs = require('fs');
 var assert = require('assert');
 
@@ -561,5 +562,79 @@ describe('httpProxyOptions.xfwd=false', function() {
       .expectJSON({
         host: 'example.com',
       }, done);
+  });
+});
+
+describe('httpProxyOptions.getProxyForUrl', function() {
+  var proxy_server;
+  var proxy_url;
+  before(function() {
+    // Using a real server instead of a mock because Nock doesn't can't mock proxies.
+    proxy_server = http.createServer(function(req, res) {
+      res.end(req.method + ' ' + req.url + ' Host=' + req.headers.host);
+    });
+    proxy_url = 'http://127.0.0.1:' + proxy_server.listen(0).address().port;
+
+    cors_anywhere = createServer({
+      httpProxyOptions: {
+        xfwd: false
+      }
+    });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+  });
+  afterEach(function() {
+    // Assuming that they were not set before.
+    delete process.env.https_proxy;
+    delete process.env.http_proxy;
+    delete process.env.no_proxy;
+  });
+  after(function(done) {
+    proxy_server.close(function() {
+      done();
+    });
+  });
+  after(stopServer);
+
+  it('http_proxy should be respected for matching domains', function(done) {
+    process.env.http_proxy = proxy_url;
+
+    request(cors_anywhere)
+      .get('/http://example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'GET http://example.com/ Host=example.com', done);
+  });
+
+  it('http_proxy should be ignored for http URLs', function(done) {
+    process.env.http_proxy = proxy_url;
+    request(cors_anywhere)
+      .get('/https://example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'Response from https://example.com', done);
+  });
+
+  it('https_proxy should be respected for matching domains', function(done) {
+    process.env.https_proxy = proxy_url;
+
+    request(cors_anywhere)
+      .get('/https://example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'GET https://example.com/ Host=example.com', done);
+  });
+
+  it('https_proxy should be ignored for http URLs', function(done) {
+    process.env.https_proxy = proxy_url;
+    request(cors_anywhere)
+      .get('/http://example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'Response from example.com', done);
+  });
+
+  it('https_proxy + no_proxy should not intercept requests in no_proxy', function(done) {
+    process.env.https_proxy = proxy_url;
+    process.env.no_proxy = 'example.com:443';
+    request(cors_anywhere)
+      .get('/https://example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'Response from https://example.com', done);
   });
 });

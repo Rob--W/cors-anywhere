@@ -93,6 +93,12 @@ nock('http://example.com')
   .replyWithError('throw node')
 ;
 
+nock('https://example.com')
+  .persist()
+  .get('/')
+  .reply(200, 'Response from https://example.com')
+;
+
 echoheaders('http://example.com');
 echoheaders('http://example.com:1337');
 echoheaders('https://example.com');
