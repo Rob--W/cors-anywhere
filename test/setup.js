@@ -49,7 +49,7 @@ nock('http://example.com')
 
   .get('/redirecttarget')
   .reply(200, 'redirect target', {
-    'Some header': 'value'
+    'Some-header': 'value'
   })
 
   .head('/redirect')

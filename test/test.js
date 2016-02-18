@@ -142,11 +142,11 @@ describe('Basic functionality', function() {
       .head('/example.com/redirect')
       .redirects(0)
       .expect('Access-Control-Allow-Origin', '*')
-      .expect('some header', 'value')
+      .expect('some-header', 'value')
       .expect('x-request-url', 'http://example.com/redirect')
       .expect('x-cors-redirect-1', '302 http://example.com/redirecttarget')
       .expect('x-final-url', 'http://example.com/redirecttarget')
-      .expect('access-control-expose-headers', /some header,x-final-url/)
+      .expect('access-control-expose-headers', /some-header,x-final-url/)
       .expectNoHeader('header at redirect')
       .expect(200, '', done);
   });
@@ -156,11 +156,11 @@ describe('Basic functionality', function() {
       .get('/example.com/redirect')
       .redirects(0)
       .expect('Access-Control-Allow-Origin', '*')
-      .expect('some header', 'value')
+      .expect('some-header', 'value')
       .expect('x-request-url', 'http://example.com/redirect')
       .expect('x-cors-redirect-1', '302 http://example.com/redirecttarget')
       .expect('x-final-url', 'http://example.com/redirecttarget')
-      .expect('access-control-expose-headers', /some header,x-final-url/)
+      .expect('access-control-expose-headers', /some-header,x-final-url/)
       .expectNoHeader('header at redirect')
       .expect(200, 'redirect target', done);
   });

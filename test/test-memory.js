@@ -59,7 +59,7 @@ describe('memory usage', function() {
         cors_api_url + 'http://127.0.0.1:' + server.address().port);
     request.agent = false; // Force Connection: Close
     request.headers = {
-      'Long header': new Array(requestSize * 1e3).join('x'),
+      'Long-header': new Array(requestSize * 1e3).join('x'),
     };
     (function requestAgain() {
       if (remaining-- === 0) {
