@@ -104,6 +104,8 @@ proxy requests. The following options are supported:
   Example: `["cookie"]`
 * dictionary of lowercase strings `setHeaders` - Set headers for the request (overwrites existing ones).  
   Example: `{"x-powered-by": "CORS Anywhere"}`
+* string `helpFile` - Set the help file (shown at the homepage).  
+  Example: `"myCustomHelpText.txt"`
 
 For advanced users, the following options are also provided.
 

@@ -798,3 +798,40 @@ describe('httpProxyOptions.getProxyForUrl', function() {
       .expect(200, 'Response from https://example.com', done);
   });
 });
+
+describe('helpFile', function() {
+
+  afterEach(stopServer);
+
+  it('GET / with custom text helpFile', function(done) {
+    var customHelpTextPath = path.join(__dirname, './customHelp.txt');
+    var customHelpText = fs.readFileSync(customHelpTextPath, {encoding: 'utf8'});
+
+    cors_anywhere = createServer({
+      helpFile: customHelpTextPath,
+    });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+
+    request(cors_anywhere)
+      .get('/')
+      .type('text/plain')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, customHelpText, done);
+  });
+
+  it('GET / with custom HTML helpFile', function(done) {
+    var customHelpTextPath = path.join(__dirname, './customHelp.html');
+    var customHelpText = fs.readFileSync(customHelpTextPath, {encoding: 'utf8'});
+
+    cors_anywhere = createServer({
+      helpFile: customHelpTextPath,
+    });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+
+    request(cors_anywhere)
+      .get('/')
+      .type('text/html')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, customHelpText, done);
+  });
+});
