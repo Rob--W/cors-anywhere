@@ -89,6 +89,9 @@ nock('http://example.com')
     Location: '/redirectloop',
   })
 
+  .get('/redirectwithoutlocation')
+  .reply(302, 'maybe found')
+
   .get('/proxyerror')
   .replyWithError('throw node')
 ;
