@@ -22,8 +22,7 @@
   "main": "./lib/cors-anywhere.js",
   "dependencies": {
     "http-proxy": "1.11.1",
-    "proxy-from-env": "0.0.1",
-    "requires-port": "1.0.0"
+    "proxy-from-env": "0.0.1"
   },
   "devDependencies": {
     "coveralls": "^2.11.6",
