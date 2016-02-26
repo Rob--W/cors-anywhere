@@ -93,7 +93,10 @@ describe('memory usage', function() {
 
   it('100 GET requests 50k', function(done) {
     // This test is just for comparison with the following tests.
-    performNRequests(100, 50, 550, done);
+    // On Node 0.10.x, the initial memory usage seems higher on Travis, so use
+    // a higher maximum value to avoid flaky tests.
+    var memMax = /^v0\./.test(process.version) ? 1200 : 550;
+    performNRequests(100, 50, memMax, done);
   });
 
   // 100x 1k and 100x 50k for comparison.
