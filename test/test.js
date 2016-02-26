@@ -834,4 +834,19 @@ describe('helpFile', function() {
       .expect('Access-Control-Allow-Origin', '*')
       .expect(200, customHelpText, done);
   });
+
+  it('GET / with non-existent help file', function(done) {
+    var customHelpTextPath = path.join(__dirname, 'Some non-existing file.');
+
+    cors_anywhere = createServer({
+      helpFile: customHelpTextPath,
+    });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+
+    request(cors_anywhere)
+      .get('/')
+      .type('text/plain')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(500, '', done);
+  });
 });
