@@ -1,7 +1,6 @@
 *.swp
-*.kate-swp
 *.tmp
 *.log
 
-del/
+coverage/
 node_modules/
