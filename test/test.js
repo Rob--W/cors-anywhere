@@ -350,7 +350,7 @@ describe('Proxy errors', function() {
     bad_tcp_server_url = 'http://127.0.0.1:' + bad_tcp_server.listen(0).address().port;
   });
   after(function(done) {
-    bad_http_server.close(function() {
+    bad_tcp_server.close(function() {
       done();
     });
   });
@@ -542,6 +542,7 @@ describe('requireHeader', function() {
       cors_anywhere = createServer({
         requireHeader: 'origin',
       });
+      cors_anywhere_port = cors_anywhere.listen(0).address().port;
       request(cors_anywhere)
         .get('/example.com/')
         .expect('Access-Control-Allow-Origin', '*')
@@ -554,6 +555,7 @@ describe('requireHeader', function() {
       cors_anywhere = createServer({
         requireHeader: 'origin',
       });
+      cors_anywhere_port = cors_anywhere.listen(0).address().port;
       request(cors_anywhere)
         .get('/example.com/')
         .set('Origin', 'null')
@@ -567,6 +569,7 @@ describe('requireHeader', function() {
       cors_anywhere = createServer({
         requireHeader: 'ORIGIN',
       });
+      cors_anywhere_port = cors_anywhere.listen(0).address().port;
       request(cors_anywhere)
         .get('/example.com/')
         .expect('Access-Control-Allow-Origin', '*')
@@ -579,6 +582,7 @@ describe('requireHeader', function() {
       cors_anywhere = createServer({
         requireHeader: 'ORIGIN',
       });
+      cors_anywhere_port = cors_anywhere.listen(0).address().port;
       request(cors_anywhere)
         .get('/example.com/')
         .set('Origin', 'null')
@@ -592,6 +596,7 @@ describe('requireHeader', function() {
       cors_anywhere = createServer({
         requireHeader: [],
       });
+      cors_anywhere_port = cors_anywhere.listen(0).address().port;
       request(cors_anywhere)
         .get('/example.com/')
         .expect('Access-Control-Allow-Origin', '*')
