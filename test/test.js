@@ -444,6 +444,68 @@ describe('requireHeader', function() {
       .expect('Access-Control-Allow-Origin', '*')
       .expect(200, done);
   });
+
+  it('GET /example.com without header (requireHeader as string)', function(done) {
+    stopServer(function() {
+      cors_anywhere = createServer({
+        requireHeader: 'origin',
+      });
+      request(cors_anywhere)
+        .get('/example.com/')
+        .expect('Access-Control-Allow-Origin', '*')
+        .expect(400, 'Missing required request header. Must specify one of: origin', done);
+    });
+  });
+
+  it('GET /example.com with header (requireHeader as string)', function(done) {
+    stopServer(function() {
+      cors_anywhere = createServer({
+        requireHeader: 'origin',
+      });
+      request(cors_anywhere)
+        .get('/example.com/')
+        .set('Origin', 'null')
+        .expect('Access-Control-Allow-Origin', '*')
+        .expect(200, 'Response from example.com', done);
+    });
+  });
+
+  it('GET /example.com without header (requireHeader as string, uppercase)', function(done) {
+    stopServer(function() {
+      cors_anywhere = createServer({
+        requireHeader: 'ORIGIN',
+      });
+      request(cors_anywhere)
+        .get('/example.com/')
+        .expect('Access-Control-Allow-Origin', '*')
+        .expect(400, 'Missing required request header. Must specify one of: origin', done);
+    });
+  });
+
+  it('GET /example.com with header (requireHeader as string, uppercase)', function(done) {
+    stopServer(function() {
+      cors_anywhere = createServer({
+        requireHeader: 'ORIGIN',
+      });
+      request(cors_anywhere)
+        .get('/example.com/')
+        .set('Origin', 'null')
+        .expect('Access-Control-Allow-Origin', '*')
+        .expect(200, 'Response from example.com', done);
+    });
+  });
+
+  it('GET /example.com (requireHeader is an empty array)', function(done) {
+    stopServer(function() {
+      cors_anywhere = createServer({
+        requireHeader: [],
+      });
+      request(cors_anywhere)
+        .get('/example.com/')
+        .expect('Access-Control-Allow-Origin', '*')
+        .expect(200, 'Response from example.com', done);
+    });
+  });
 });
 
 describe('removeHeaders', function() {
