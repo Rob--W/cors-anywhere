@@ -1,23 +1,23 @@
 {
   "name": "cors-anywhere",
   "version": "0.3.0",
-  "description": "CORS Anywhere is a reverse proxy which adds CORS headers to the proxied request. Request URL is taken from the path", 
+  "description": "CORS Anywhere is a reverse proxy which adds CORS headers to the proxied request. Request URL is taken from the path",
   "license": "MIT",
   "author": "Rob Wu <rob@robwu.nl>",
   "repository": {
-      "type": "git",
-      "url": "https://github.com/Rob--W/cors-anywhere.git"
+    "type": "git",
+    "url": "https://github.com/Rob--W/cors-anywhere.git"
   },
   "bugs": {
-      "url": "https://github.com/Rob--W/cors-anywhere/issues/",
-      "email": "rob@robwu.nl"
+    "url": "https://github.com/Rob--W/cors-anywhere/issues/",
+    "email": "rob@robwu.nl"
   },
   "keywords": [
-      "cors",
-      "cross-domain",
-      "http-proxy",
-      "proxy",
-      "heroku"
+    "cors",
+    "cross-domain",
+    "http-proxy",
+    "proxy",
+    "heroku"
   ],
   "main": "./lib/cors-anywhere.js",
   "dependencies": {
@@ -26,11 +26,13 @@
     "requires-port": "1.0.0"
   },
   "devDependencies": {
+    "eslint": "^2.2.0",
     "mocha": "~2.2.4",
     "nock": "~1.9.0",
     "supertest": "~0.15.0"
   },
   "scripts": {
+    "lint": "eslint .",
     "test": "./node_modules/.bin/mocha ./test/test*.js --reporter spec"
   },
   "engines": {

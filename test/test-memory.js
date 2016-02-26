@@ -1,3 +1,4 @@
+/* eslint-env mocha */
 // Run this specific test using:
 // npm test -- -f memory
 var http = require('http');

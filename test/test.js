@@ -1,3 +1,4 @@
+/* eslint-env mocha */
 require('./setup');
 
 var createServer = require('../').createServer;
@@ -8,7 +9,7 @@ var fs = require('fs');
 var assert = require('assert');
 
 var helpTextPath = path.join(__dirname, '../lib/help.txt');
-var helpText = fs.readFileSync(helpTextPath, { encoding: 'utf8' });
+var helpText = fs.readFileSync(helpTextPath, {encoding: 'utf8'});
 
 request.Test.prototype.expectJSON = function(json, done) {
   this.expect(function(res) {
@@ -132,7 +133,7 @@ describe('Basic functionality', function() {
       .post('/example.com/echopost')
       .attach('file', path.join(__dirname, 'dummy.txt'))
       .expect('Access-Control-Allow-Origin', '*')
-      .expect(/\r\nContent-Disposition: form-data; name="file"; filename="dummy.txt"\r\nContent-Type: text\/plain\r\n\r\ndummy content\n\r\n/, done);
+      .expect(/\r\nContent-Disposition: form-data; name="file"; filename="dummy.txt"\r\nContent-Type: text\/plain\r\n\r\ndummy content\n\r\n/, done); // eslint-disable-line max-len
   });
 
   it('HEAD with redirect should be followed', function(done) {
@@ -494,7 +495,7 @@ describe('setHeaders', function() {
       .expect('Access-Control-Allow-Origin', '*')
       .expectJSON({
         host: 'example.com',
-        'x-powered-by': 'CORS Anywhere'
+        'x-powered-by': 'CORS Anywhere',
       }, done);
   });
 
@@ -505,7 +506,7 @@ describe('setHeaders', function() {
       .expect('Access-Control-Allow-Origin', '*')
       .expectJSON({
         host: 'example.com',
-        'x-powered-by': 'CORS Anywhere'
+        'x-powered-by': 'CORS Anywhere',
       }, done);
   });
 });
@@ -527,7 +528,7 @@ describe('setHeaders + removeHeaders', function() {
       .expect('Access-Control-Allow-Origin', '*')
       .expectJSON({
         host: 'example.com',
-        'x-powered-by': 'CORS Anywhere'
+        'x-powered-by': 'CORS Anywhere',
       }, done);
   });
 
@@ -538,7 +539,7 @@ describe('setHeaders + removeHeaders', function() {
       .expect('Access-Control-Allow-Origin', '*')
       .expectJSON({
         host: 'example.com',
-        'x-powered-by': 'CORS Anywhere'
+        'x-powered-by': 'CORS Anywhere',
       }, done);
   });
 });
@@ -547,8 +548,8 @@ describe('httpProxyOptions.xfwd=false', function() {
   before(function() {
     cors_anywhere = createServer({
       httpProxyOptions: {
-        xfwd: false
-      }
+        xfwd: false,
+      },
     });
     cors_anywhere_port = cors_anywhere.listen(0).address().port;
   });
@@ -577,8 +578,8 @@ describe('httpProxyOptions.getProxyForUrl', function() {
 
     cors_anywhere = createServer({
       httpProxyOptions: {
-        xfwd: false
-      }
+        xfwd: false,
+      },
     });
     cors_anywhere_port = cors_anywhere.listen(0).address().port;
   });

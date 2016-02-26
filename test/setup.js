@@ -6,7 +6,7 @@ function echoheaders(origin) {
   nock(origin)
     .persist()
     .get('/echoheaders')
-    .reply(function(uri) {
+    .reply(function() {
       var headers = this.req.headers;
       var excluded_headers = [
         'accept-encoding',
@@ -49,18 +49,18 @@ nock('http://example.com')
 
   .get('/redirecttarget')
   .reply(200, 'redirect target', {
-    'Some-header': 'value'
+    'Some-header': 'value',
   })
 
   .head('/redirect')
   .reply(302, '', {
-    'Location': '/redirecttarget'
+    Location: '/redirecttarget',
   })
 
   .get('/redirect')
   .reply(302, 'redirecting...', {
     'header at redirect': 'should not be here',
-    'Location': '/redirecttarget'
+    Location: '/redirecttarget',
   })
 
   .get('/redirectposttarget')
@@ -71,22 +71,22 @@ nock('http://example.com')
 
   .post('/redirectpost')
   .reply(302, 'redirecting...', {
-    'Location': '/redirectposttarget'
+    Location: '/redirectposttarget',
   })
 
   .post('/redirect307')
   .reply(307, 'redirecting...', {
-    'Location': '/redirectposttarget'
+    Location: '/redirectposttarget',
   })
 
   .get('/redirect2redirect')
   .reply(302, 'redirecting to redirect...', {
-    'Location': '/redirect'
+    Location: '/redirect',
   })
 
   .get('/redirectloop')
   .reply(302, 'redirecting ad infinitum...', {
-    'Location': '/redirectloop'
+    Location: '/redirectloop',
   })
 
   .get('/proxyerror')

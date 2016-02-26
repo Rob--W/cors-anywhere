@@ -1,7 +1,0 @@
-{
-    "node": true,
-    "eqnull": true,
-    "undef": true,
-    "unused": "vars",
-    "mocha": true
-}
