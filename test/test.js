@@ -278,12 +278,76 @@ describe('Basic functionality', function() {
       .expectNoHeader('set-cookie')
       .expectNoHeader('set-cookie2', done);
   });
+});
+
+describe('Proxy errors', function() {
+  before(function() {
+    cors_anywhere = createServer();
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+  });
+  after(stopServer);
+
+  var bad_http_server;
+  var bad_http_server_url;
+  before(function() {
+    bad_http_server = http.createServer(function(req, res) {
+      res.writeHead(418, {
+        'Content-Length': 'Not a digit',
+      });
+      res.end('This response has an invalid Content-Length header.');
+    });
+    bad_http_server_url = 'http://127.0.0.1:' + bad_http_server.listen(0).address().port;
+  });
+  after(function(done) {
+    bad_http_server.close(function() {
+      done();
+    });
+  });
+
+  var bad_tcp_server;
+  var bad_tcp_server_url;
+  before(function() {
+    bad_tcp_server = require('net').createServer(function(socket) {
+      socket.setEncoding('utf-8');
+      socket.on('data', function(data) {
+        if (data.indexOf('\r\n') >= 0) {
+          // Assume end of headers.
+          socket.write('HTTP/1.1 418 OK\r\n');
+          socket.write('Transfer-Encoding: chunked\r\n');
+          socket.write('\r\n');
+          socket.end('JK I lied, this is NOT a chunked response!');
+        }
+      });
+    });
+    bad_tcp_server_url = 'http://127.0.0.1:' + bad_tcp_server.listen(0).address().port;
+  });
+  after(function(done) {
+    bad_http_server.close(function() {
+      done();
+    });
+  });
 
   it('Proxy error', function(done) {
     request(cors_anywhere)
       .get('/example.com/proxyerror')
       .expect('Access-Control-Allow-Origin', '*')
       .expect(404, 'Not found because of proxy error: Error: throw node', done);
+  });
+
+  it('Content-Length mismatch', function(done) {
+    request(cors_anywhere)
+      .get('/' + bad_http_server_url)
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(404, 'Not found because of proxy error: Error: Parse Error', done);
+  });
+
+  it('Content-Encoding invalid body', function(done) {
+    // The HTTP status can't be changed because the headers have already been
+    // sent.
+    request(cors_anywhere)
+      .get('/' + bad_tcp_server_url)
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(418, '', done);
   });
 });
 
