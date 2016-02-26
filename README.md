@@ -116,14 +116,9 @@ For advanced users, the following options are also provided.
   [`https.createServer`](https://nodejs.org/api/https.html#https_https_createserver_options_requestlistener) method.
 
 
-## Dependencies
-
-- NodeJitsu's [http-proxy](https://github.com/nodejitsu/node-http-proxy)
-
-
 ## License
 
-Copyright (C) 2013 - 2015 Rob Wu <rob@robwu.nl>
+Copyright (C) 2013 - 2016 Rob Wu <rob@robwu.nl>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
