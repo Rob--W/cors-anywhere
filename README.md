@@ -85,13 +85,8 @@ jQuery.ajaxPrefilter(function(options) {
 
 ### Server
 
-The module exports two properties: `getHandler` and `createServer`.
-
-* `getHandler(options)` returns a handler which implements the routing logic.
-  This handler is used by [http-proxy](https://github.com/nodejitsu/node-http-proxy).
-* `createServer(options)` creates a server with the default handler.
-
-The following options are recognized by both methods:
+The module exports `createServer(options)`, which creates a server that handles
+proxy requests. The following options are supported:
 
 * function `getProxyForUrl` - If set, specifies which intermediate proxy to use for a given URL.
   If the return value is void, a direct request is sent. The default implementation is
@@ -110,9 +105,11 @@ The following options are recognized by both methods:
 * dictionary of lowercase strings `setHeaders` - Set headers for the request (overwrites existing ones).  
   Example: `{"x-powered-by": "CORS Anywhere"}`
 
-`createServer` recognizes the following option as well:
+For advanced users, the following options are also provided.
 
-* `httpProxyOptions` - Options for http-proxy. The documentation for these options can be found [here](https://github.com/nodejitsu/node-http-proxy#options).
+* `httpProxyOptions` - Under the hood, [http-proxy](https://github.com/nodejitsu/node-http-proxy)
+  is used to proxy requests. Use this option if you really need to pass options
+  to http-proxy. The documentation for these options can be found [here](https://github.com/nodejitsu/node-http-proxy#options).
 * `httpsOptions` - If set, a `https.Server` will be created. The given options are passed to the
   [`https.createServer`](https://nodejs.org/api/https.html#https_https_createserver_options_requestlistener) method.
 
