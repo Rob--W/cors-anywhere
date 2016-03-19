@@ -505,6 +505,81 @@ describe('originWhitelist', function() {
   });
 });
 
+describe('redirectSameOrigin', function() {
+  before(function() {
+    cors_anywhere = createServer({
+      redirectSameOrigin: true,
+    });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+  });
+  after(stopServer);
+
+  it('GET /example.com with Origin: http://example.com', function(done) {
+    request(cors_anywhere)
+      .get('/example.com/')
+      .set('Origin', 'http://example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect('Cache-Control', 'private')
+      .expect('Vary', 'origin')
+      .expect('Location', 'http://example.com/')
+      .expect(301, done);
+  });
+
+  it('GET /example.com with Origin: https://example.com', function(done) {
+    // Not same-origin because of different schemes.
+    request(cors_anywhere)
+      .get('/example.com/')
+      .set('Origin', 'https://example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'Response from example.com', done);
+  });
+
+  it('GET /example.com with Origin: http://example.com:1234', function(done) {
+    // Not same-origin because of different ports.
+    request(cors_anywhere)
+      .get('/example.com/')
+      .set('Origin', 'http://example.com:1234')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'Response from example.com', done);
+  });
+
+  it('GET /example.com:1234 with Origin: http://example.com', function(done) {
+    // Not same-origin because of different ports.
+    request(cors_anywhere)
+      .get('/example.com:1234/')
+      .set('Origin', 'http://example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'Response from example.com:1234', done);
+  });
+
+  it('GET /example.com with Origin: http://example.com.test', function(done) {
+    // Not same-origin because of different host names.
+    request(cors_anywhere)
+      .get('/example.com/')
+      .set('Origin', 'http://example.com.test')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'Response from example.com', done);
+  });
+
+  it('GET /example.com.com with Origin: http://example.com', function(done) {
+    // Not same-origin because of different host names.
+    request(cors_anywhere)
+      .get('/example.com.com/')
+      .set('Origin', 'http://example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'Response from example.com.com', done);
+  });
+
+  it('GET /prefix.example.com with Origin: http://example.com', function(done) {
+    // Not same-origin because of different host names.
+    request(cors_anywhere)
+      .get('/prefix.example.com/')
+      .set('Origin', 'http://example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'Response from prefix.example.com', done);
+  });
+});
+
 describe('requireHeader', function() {
   before(function() {
     cors_anywhere = createServer({

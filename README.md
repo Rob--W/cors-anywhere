@@ -97,6 +97,9 @@ proxy requests. The following options are supported:
 * array of strings `originWhitelist` - If set, requests whose origin is not listed are blocked.  
   If this list is empty, all origins are allowed.
   Example: `['https://good.example.com', 'http://good.example.com']`
+* boolean `redirectSameOrigin` - If true, requests to URLs from the same origin will not be proxied but redirected.
+  The primary purpose for this option is to save server resources by delegating the request to the client
+  (since same-origin requests should always succeed, even without proxying).
 * array of strings `requireHeader` - If set, the request must include this header or the API will refuse to proxy.  
   Recommended if you want to prevent users from using the proxy for normal browsing.  
   Example: `['Origin', 'X-Requested-With']`.

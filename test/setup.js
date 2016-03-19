@@ -102,6 +102,24 @@ nock('https://example.com')
   .reply(200, 'Response from https://example.com')
 ;
 
+nock('http://example.com.com')
+  .persist()
+  .get('/')
+  .reply(200, 'Response from example.com.com')
+;
+
+nock('http://example.com:1234')
+  .persist()
+  .get('/')
+  .reply(200, 'Response from example.com:1234')
+;
+
+nock('http://prefix.example.com')
+  .persist()
+  .get('/')
+  .reply(200, 'Response from prefix.example.com')
+;
+
 echoheaders('http://example.com');
 echoheaders('http://example.com:1337');
 echoheaders('https://example.com');
