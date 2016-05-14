@@ -118,6 +118,9 @@ For advanced users, the following options are also provided.
 * `httpsOptions` - If set, a `https.Server` will be created. The given options are passed to the
   [`https.createServer`](https://nodejs.org/api/https.html#https_https_createserver_options_requestlistener) method.
 
+For even more advanced usage (building upon CORS Anywhere),
+see the sample code in [test/test-examples.js](test/test-examples.js).
+
 
 ## License
 
