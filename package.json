@@ -28,6 +28,7 @@
     "coveralls": "^2.11.6",
     "eslint": "^2.2.0",
     "istanbul": "^0.4.2",
+    "lolex": "^1.5.0",
     "mocha": "~2.2.4",
     "nock": "~1.9.0",
     "supertest": "~0.15.0"
@@ -35,7 +36,7 @@
   "scripts": {
     "lint": "eslint .",
     "test": "mocha ./test/test*.js --reporter spec",
-    "test-coverage": "istanbul cover ./node_modules/.bin/_mocha -- test/test.js --reporter spec"
+    "test-coverage": "istanbul cover ./node_modules/.bin/_mocha -- test/test.js test/test-ratelimit.js --reporter spec"
   },
   "engines": {
     "node": ">=0.6.6",

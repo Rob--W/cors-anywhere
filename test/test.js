@@ -505,6 +505,38 @@ describe('originWhitelist', function() {
   });
 });
 
+describe('checkRateLimit', function() {
+  afterEach(stopServer);
+
+  it('GET /example.com without rate-limit', function(done) {
+    cors_anywhere = createServer({
+      checkRateLimit: function() {},
+    });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+    request(cors_anywhere)
+      .get('/example.com/')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, done);
+  });
+
+  it('GET /example.com with rate-limit', function(done) {
+    cors_anywhere = createServer({
+      checkRateLimit: function(origin) {
+        // Non-empty value. Let's return the origin parameter so that we also verify that the
+        // the parameter is really the origin.
+        return '[' + origin + ']';
+      },
+    });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+    request(cors_anywhere)
+      .get('/example.com/')
+      .set('Origin', 'http://example.net:1234')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(429, done,
+          'The origin "http://example.net" has sent too many requests.\n[http://example.com:1234]');
+  });
+});
+
 describe('redirectSameOrigin', function() {
   before(function() {
     cors_anywhere = createServer({
