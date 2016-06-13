@@ -41,5 +41,6 @@
   "engines": {
     "node": ">=0.6.6",
     "npm": ">=1.1.0"
-  }
+  },
+  "bin" : { "cors-anywhere" : "./server.js" }
 }
