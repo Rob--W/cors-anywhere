@@ -7,7 +7,7 @@ The url to proxy is literally taken from the path, validated and proxied. The pr
 part of the proxied URI is optional, and defaults to "http". If port 443 is specified,
 the protocol defaults to "https".
 
-This package does not put any restrictions on the http methods or headers, except for
+This package does not put any restrictions on the http headers, except for
 cookies. Requesting [user credentials](http://www.w3.org/TR/cors/#user-credentials) is disallowed.
 The app can be configured to require a header for proxying a request, for example to avoid
 a direct visit from the browser.
@@ -85,15 +85,22 @@ jQuery.ajaxPrefilter(function(options) {
 The module exports `createServer(options)`, which creates a server that handles
 proxy requests. The following options are supported:
 
+* list of HTTP method strings `allowedMethods` - If set, incoming requests that don't use one of the methods in this will receive a 405 response. An empty list will allow all methods.
+  Example: `['GET', 'POST', 'OPTIONS']`
 * function `getProxyForUrl` - If set, specifies which intermediate proxy to use for a given URL.
   If the return value is void, a direct request is sent. The default implementation is
   [`proxy-from-env`](https://github.com/Rob--W/proxy-from-env), which respects the standard proxy
   environment variables (e.g. `https_proxy`, `no_proxy`, etc.).  
 * array of strings `originBlacklist` - If set, requests whose origin is listed are blocked.  
   Example: `['https://bad.example.com', 'http://bad.example.com']`
+* array of RegEx `originRegexBlacklist` - If set, requests whose origin matches any entry  in this list are blocked.  
+    Example: `[/https?:\/\/bad\.example\.com/]`
 * array of strings `originWhitelist` - If set, requests whose origin is not listed are blocked.  
   If this list is empty, all origins are allowed.
   Example: `['https://good.example.com', 'http://good.example.com']`
+* array of RegEx `originRegexWhitelist` - If set, requests whose origin does not match any entry in this list are blocked.  
+    If this list is empty, all origins are allowed.
+    Example: `[/https?:\/\/good\.example\.com/]`
 * function `checkRateLimit` - If set, it is called with the origin (string) of the request. If this
   function returns a non-empty string, the request is rejected and the string is send to the client.
 * boolean `redirectSameOrigin` - If true, requests to URLs from the same origin will not be proxied but redirected.
@@ -106,6 +113,12 @@ proxy requests. The following options are supported:
   Example: `["cookie"]`
 * dictionary of lowercase strings `setHeaders` - Set headers for the request (overwrites existing ones).  
   Example: `{"x-powered-by": "CORS Anywhere"}`
+* dictionary of lowercase strings `setResponseHeaders` - Set headers on the outgoing proxied response (overwrites existing ones).  
+  Example: `{"x-powered-by": "CORS Anywhere"}`
+* boolean `wildcardOrigin` - If true (default), return `*` as the value for the `access-control-allow-origin` header on the outgoing response. If false, set the value to the incoming request's `Origin` header.
+* array of strings `pathPrefixes` - The list of allowed prefixes in the path before the URL to be proxied. To allow proxying from the root path (default), include an empty string.
+  Example: `['my-proxy-path/', '']` will correctly proxy requests made to `http://my.proxy.domain/my-proxy-path/http://www.google.com` and `http://my.proxy.domain/http://www.google.com`.
+* boolean `showHelp` - If true (default), the help page will be shown. If false, a 404 will be returned instead.
 * string `helpFile` - Set the help file (shown at the homepage).  
   Example: `"myCustomHelpText.txt"`
 
