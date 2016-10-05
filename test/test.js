@@ -439,6 +439,34 @@ describe('server on https', function() {
   });
 });
 
+describe('allowedMethods', function() {
+  before(function() {
+    cors_anywhere = createServer({
+      allowedMethods: ['GET', 'POST'],
+    });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+  });
+  after(stopServer);
+
+  it('GET /example.com with GET allowed', function(done) {
+    request(cors_anywhere)
+      .get('/example.com/')
+      .set('Origin', 'https://permitted.origin.test')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect('Access-Control-Allow-Methods', 'GET, POST')
+      .expect(200, done);
+  });
+
+  it('HEAD /example.com with HEAD not allowed', function(done) {
+    request(cors_anywhere)
+      .head('/example.com/')
+      .set('Origin', 'https://permitted.origin.test')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect('Access-Control-Allow-Methods', 'GET, POST')
+      .expect(405, done);
+  });
+});
+
 describe('originBlacklist', function() {
   before(function() {
     cors_anywhere = createServer({
@@ -1104,5 +1132,36 @@ describe('pathPrefixes', function() {
       .get('/example.com/')
       .expect('Access-Control-Allow-Origin', '*')
       .expect(200, done);
+  });
+});
+
+describe('forced pathPrefixes', function() {
+  before(function() {
+    cors_anywhere = createServer({
+      pathPrefixes: ['my/proxy/path/'],
+    });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+  });
+  after(stopServer);
+
+  it('GET /example.com with correct prefix', function(done) {
+    request(cors_anywhere)
+      .get('/my/proxy/path/example.com/')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, done);
+  });
+
+  it('GET /example.com with incorrect prefix', function(done) {
+    request(cors_anywhere)
+      .get('/some/path/example.com/')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(404, done);
+  });
+
+  it('GET /example.com with no prefix', function(done) {
+    request(cors_anywhere)
+      .get('/example.com/')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(404, done);
   });
 });
