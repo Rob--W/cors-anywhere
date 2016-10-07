@@ -500,40 +500,6 @@ describe('originBlacklist', function() {
   });
 });
 
-describe('originRegexBlacklist', function() {
-  before(function() {
-    cors_anywhere = createServer({
-      originRegexBlacklist: [/https?:\/\/denied\.origin\.test/],
-    });
-    cors_anywhere_port = cors_anywhere.listen(0).address().port;
-  });
-  after(stopServer);
-
-  it('GET /example.com with denied origin', function(done) {
-    request(cors_anywhere)
-      .get('/example.com/')
-      .set('Origin', 'http://denied.origin.test')
-      .expect('Access-Control-Allow-Origin', '*')
-      .expect(403, done);
-  });
-
-  it('GET /example.com without denied origin', function(done) {
-    request(cors_anywhere)
-      .get('/example.com/')
-      .set('Origin', 'http://permitted.origin.test')
-      .expect('Access-Control-Allow-Origin', '*')
-      .expect(200, done);
-  });
-
-  it('GET /example.com without origin', function(done) {
-    request(cors_anywhere)
-      .get('/example.com/')
-      .expect('Access-Control-Allow-Origin', '*')
-      .expect(200, done);
-  });
-
-});
-
 describe('originWhitelist', function() {
   before(function() {
     cors_anywhere = createServer({
@@ -555,39 +521,6 @@ describe('originWhitelist', function() {
     request(cors_anywhere)
       .get('/example.com/')
       .set('Origin', 'http://permitted.origin.test') // Note: different scheme!
-      .expect('Access-Control-Allow-Origin', '*')
-      .expect(403, done);
-  });
-
-  it('GET /example.com without origin', function(done) {
-    request(cors_anywhere)
-      .get('/example.com/')
-      .expect('Access-Control-Allow-Origin', '*')
-      .expect(403, done);
-  });
-});
-
-describe('originRegexWhitelist', function() {
-  before(function() {
-    cors_anywhere = createServer({
-      originRegexWhitelist: [/https?:\/\/permitted\.origin\.test/],
-    });
-    cors_anywhere_port = cors_anywhere.listen(0).address().port;
-  });
-  after(stopServer);
-
-  it('GET /example.com with permitted origin', function(done) {
-    request(cors_anywhere)
-      .get('/example.com/')
-      .set('Origin', 'https://permitted.origin.test')
-      .expect('Access-Control-Allow-Origin', '*')
-      .expect(200, done);
-  });
-
-  it('GET /example.com without permitted origin', function(done) {
-    request(cors_anywhere)
-      .get('/example.com/')
-      .set('Origin', 'http://not.permitted.origin.test')
       .expect('Access-Control-Allow-Origin', '*')
       .expect(403, done);
   });
@@ -1001,22 +934,6 @@ describe('httpProxyOptions.getProxyForUrl', function() {
   });
 });
 
-describe('showHelp', function() {
-  before(function() {
-    cors_anywhere = createServer({
-      showHelp: false,
-    });
-    cors_anywhere_port = cors_anywhere.listen(0).address().port;
-  });
-  after(stopServer);
-
-  it('GET /example.com with showHelp set to false', function(done) {
-    request(cors_anywhere)
-      .get('/')
-      .expect(404, done);
-  });
-});
-
 describe('helpFile', function() {
 
   afterEach(stopServer);
@@ -1067,22 +984,31 @@ describe('helpFile', function() {
       .expect('Access-Control-Allow-Origin', '*')
       .expect(500, '', done);
   });
-});
 
-describe('setResponseHeaders', function() {
-  before(function() {
+  it('GET / with undefined helpFile', function(done) {
     cors_anywhere = createServer({
-      setResponseHeaders: {'x-powered-by': 'CORS Anywhere'},
+      helpFile: undefined,
     });
     cors_anywhere_port = cors_anywhere.listen(0).address().port;
-  });
-  after(stopServer);
 
-  it('GET /example.com', function(done) {
     request(cors_anywhere)
-      .get('/example.com/')
+      .get('/')
+      .type('text/plain')
       .expect('Access-Control-Allow-Origin', '*')
-      .expect('x-powered-by', 'CORS Anywhere', done);
+      .expect(404, 'Not found.', done);
+  });
+
+  it('GET / with blank helpFile', function(done) {
+    cors_anywhere = createServer({
+      helpFile: '',
+    });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+
+    request(cors_anywhere)
+      .get('/')
+      .type('text/plain')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(404, 'Not found.', done);
   });
 });
 
@@ -1100,68 +1026,7 @@ describe('wildcardOrigin', function() {
       .get('/example.com/')
       .set('Origin', 'https://permitted.origin.test')
       .expect('Access-Control-Allow-Origin', 'https://permitted.origin.test')
+      .expect('Vary', 'Origin')
       .expect(200, done);
-  });
-});
-
-describe('pathPrefixes', function() {
-  before(function() {
-    cors_anywhere = createServer({
-      pathPrefixes: ['my/proxy/path/', ''],
-    });
-    cors_anywhere_port = cors_anywhere.listen(0).address().port;
-  });
-  after(stopServer);
-
-  it('GET /example.com with correct prefix', function(done) {
-    request(cors_anywhere)
-      .get('/my/proxy/path/example.com/')
-      .expect('Access-Control-Allow-Origin', '*')
-      .expect(200, done);
-  });
-
-  it('GET /example.com with incorrect prefix', function(done) {
-    request(cors_anywhere)
-      .get('/some/path/example.com/')
-      .expect('Access-Control-Allow-Origin', '*')
-      .expect(404, done);
-  });
-
-  it('GET /example.com with no prefix', function(done) {
-    request(cors_anywhere)
-      .get('/example.com/')
-      .expect('Access-Control-Allow-Origin', '*')
-      .expect(200, done);
-  });
-});
-
-describe('forced pathPrefixes', function() {
-  before(function() {
-    cors_anywhere = createServer({
-      pathPrefixes: ['my/proxy/path/'],
-    });
-    cors_anywhere_port = cors_anywhere.listen(0).address().port;
-  });
-  after(stopServer);
-
-  it('GET /example.com with correct prefix', function(done) {
-    request(cors_anywhere)
-      .get('/my/proxy/path/example.com/')
-      .expect('Access-Control-Allow-Origin', '*')
-      .expect(200, done);
-  });
-
-  it('GET /example.com with incorrect prefix', function(done) {
-    request(cors_anywhere)
-      .get('/some/path/example.com/')
-      .expect('Access-Control-Allow-Origin', '*')
-      .expect(404, done);
-  });
-
-  it('GET /example.com with no prefix', function(done) {
-    request(cors_anywhere)
-      .get('/example.com/')
-      .expect('Access-Control-Allow-Origin', '*')
-      .expect(404, done);
   });
 });
