@@ -93,14 +93,9 @@ proxy requests. The following options are supported:
   environment variables (e.g. `https_proxy`, `no_proxy`, etc.).  
 * array of strings `originBlacklist` - If set, requests whose origin is listed are blocked.  
   Example: `['https://bad.example.com', 'http://bad.example.com']`
-* array of RegEx `originRegexBlacklist` - If set, requests whose origin matches any entry  in this list are blocked.  
-    Example: `[/https?:\/\/bad\.example\.com/]`
 * array of strings `originWhitelist` - If set, requests whose origin is not listed are blocked.  
   If this list is empty, all origins are allowed.
   Example: `['https://good.example.com', 'http://good.example.com']`
-* array of RegEx `originRegexWhitelist` - If set, requests whose origin does not match any entry in this list are blocked.  
-    If this list is empty, all origins are allowed.
-    Example: `[/https?:\/\/good\.example\.com/]`
 * function `checkRateLimit` - If set, it is called with the origin (string) of the request. If this
   function returns a non-empty string, the request is rejected and the string is send to the client.
 * boolean `redirectSameOrigin` - If true, requests to URLs from the same origin will not be proxied but redirected.
@@ -115,11 +110,8 @@ proxy requests. The following options are supported:
   Example: `{"x-powered-by": "CORS Anywhere"}`
 * dictionary of lowercase strings `setResponseHeaders` - Set headers on the outgoing proxied response (overwrites existing ones).  
   Example: `{"x-powered-by": "CORS Anywhere"}`
-* boolean `wildcardOrigin` - If true (default), return `*` as the value for the `access-control-allow-origin` header on the outgoing response. If false, set the value to the incoming request's `Origin` header.
-* array of strings `pathPrefixes` - The list of allowed prefixes in the path before the URL to be proxied. To allow proxying from the root path (default), include an empty string.
-  Example: `['my-proxy-path/', '']` will correctly proxy requests made to `http://my.proxy.domain/my-proxy-path/http://www.google.com` and `http://my.proxy.domain/http://www.google.com`.
-* boolean `showHelp` - If true (default), the help page will be shown. If false, a 404 will be returned instead.
-* string `helpFile` - Set the help file (shown at the homepage).  
+* boolean `wildcardOrigin` - If true (default), return `*` as the value for the `access-control-allow-origin` header on the outgoing response. If false, set the value to the incoming request's `Origin` header and add `Origin` to the `Vary` header.
+* string `helpFile` - Set the help file (shown at the homepage). If this is set to a falsey value then a 404 is returned instead.
   Example: `"myCustomHelpText.txt"`
 
 For advanced users, the following options are also provided.
