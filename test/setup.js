@@ -94,6 +94,11 @@ nock('http://example.com')
 
   .get('/proxyerror')
   .replyWithError('throw node')
+
+  .get('/withVaryHeader')
+  .reply(200, 'Response from example.com', {
+      'Vary': 'SomeHeader',
+  })
 ;
 
 nock('https://example.com')
