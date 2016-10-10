@@ -453,7 +453,7 @@ describe('allowedMethods', function() {
       .get('/example.com/')
       .set('Origin', 'https://permitted.origin.test')
       .expect('Access-Control-Allow-Origin', '*')
-      .expect('Access-Control-Allow-Methods', 'GET, POST')
+      .expect('Access-Control-Allow-Methods', 'GET,POST')
       .expect(200, done);
   });
 
@@ -462,7 +462,16 @@ describe('allowedMethods', function() {
       .head('/example.com/')
       .set('Origin', 'https://permitted.origin.test')
       .expect('Access-Control-Allow-Origin', '*')
-      .expect('Access-Control-Allow-Methods', 'GET, POST')
+      .expect('Access-Control-Allow-Methods', 'GET,POST')
+      .expect(405, done);
+  });
+
+  it('OPTIONS /example.com with HEAD not allowed', function(done) {
+    request(cors_anywhere)
+      .head('/example.com/')
+      .set('Origin', 'https://permitted.origin.test')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect('Access-Control-Allow-Methods', 'GET,POST')
       .expect(405, done);
   });
 });
@@ -1030,12 +1039,12 @@ describe('wildcardOrigin', function() {
       .expect(200, done);
   });
 
-  it('GET /example.com with wildcardOrigin set to false and Vary header already set', function(done) {
+  it('GET /example.com/withVaryHeader with wildcardOrigin set to false', function(done) {
     request(cors_anywhere)
       .get('/example.com/withVaryHeader')
       .set('Origin', 'https://permitted.origin.test')
       .expect('Access-Control-Allow-Origin', 'https://permitted.origin.test')
-      .expect('Vary', 'SomeHeader, Origin')
+      .expect('Vary', 'SomeHeader,Origin')
       .expect(200, done);
   });
 });
