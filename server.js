@@ -26,8 +26,7 @@ cors_proxy.createServer({
   originBlacklist: originBlacklist,
   originWhitelist: originWhitelist,
   originGreylist: originGreylist,
-  // requireHeader: ['origin', 'x-requested-with'],
-  requireHeader: [],
+  requireHeader: ['origin', 'x-requested-with'],
   checkRateLimit: checkRateLimit,
   removeHeaders: [
     'cookie',
