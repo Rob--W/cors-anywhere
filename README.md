@@ -156,6 +156,31 @@ node server.js
 ```
 
 
+### AWS Deployment tips w/ SSL
+
+Some basic tips for deploying to AWS.
+
+#### Elastic Beanstalk
+
+- Create a zip file with the lib folder, package.json and server.js.
+- Upload and Deploy zip file to Elastic Beanstalk
+- After deploy, go to Software Configuration and add an environment property for these as required:
+  - CORSANYWHERE_BLACKLIST and/or CORSANYWHERE_WHITELIST with your domain. E.g. www.example.com
+- Note the URL. E.g. myproxy.elasticbeanstalk.com
+
+#### Cloudfront
+
+- Create a new Cloudfront distribution
+- Set the origin to the Elastic Beanstalk URL. E.g. myproxy.elasticbeanstalk.com
+- Add a free SSL certificate using AWS certificate store.
+- !! IMPORTANT !! Set the _Query String Forwarding and Caching_ to _Forward all_
+- Add a CNAME entry. E.g. proxy.example.com
+
+#### Route53
+
+- Add a CNAME record proxy.example.com that points to the Cloudfront URL
+
+
 ## License
 
 Copyright (C) 2013 - 2016 Rob Wu <rob@robwu.nl>
