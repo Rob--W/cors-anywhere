@@ -3,7 +3,7 @@
 
 **CORS Anywhere** is a NodeJS proxy which adds CORS headers to the proxied request.
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/ImJustToNy/cors-anywhere)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/Rob--W/cors-anywhere)
 
 The url to proxy is literally taken from the path, validated and proxied. The protocol
 part of the proxied URI is optional, and defaults to "http". If port 443 is specified,
