@@ -810,6 +810,58 @@ describe('setHeaders + removeHeaders', function() {
   });
 });
 
+describe('Access-Control-Max-Age set', function() {
+  before(function() {
+    cors_anywhere = createServer({
+      maxAge: 600,
+    });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+  });
+  after(stopServer);
+
+  it('GET /', function(done) {
+    request(cors_anywhere)
+      .get('/')
+      .type('text/plain')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect('Access-Control-Max-Age', '600')
+      .expect(200, helpText, done);
+  });
+
+  it('GET /example.com', function(done) {
+    request(cors_anywhere)
+      .get('/example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect('Access-Control-Max-Age', '600')
+      .expect(200, 'Response from example.com', done);;
+  });
+});
+
+describe('Access-Control-Max-Age not set', function() {
+  before(function() {
+    cors_anywhere = createServer();
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+  });
+  after(stopServer);
+
+  it('GET /', function(done) {
+    request(cors_anywhere)
+      .get('/')
+      .type('text/plain')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expectNoHeader('Access-Control-Max-Age')
+      .expect(200, helpText, done);
+  });
+
+  it('GET /example.com', function(done) {
+    request(cors_anywhere)
+      .get('/example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expectNoHeader('Access-Control-Max-Age')
+      .expect(200, 'Response from example.com', done);
+  });
+});
+
 describe('httpProxyOptions.xfwd=false', function() {
   before(function() {
     cors_anywhere = createServer({
