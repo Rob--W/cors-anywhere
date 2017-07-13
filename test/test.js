@@ -165,7 +165,7 @@ describe('Basic functionality', function() {
       .expect('x-final-url', 'http://example.com/redirecttarget')
       .expect('access-control-expose-headers', /some-header,x-final-url/)
       .expectNoHeader('header at redirect')
-      .expect(200, '', done);
+      .expect(200, undefined, done);
   });
 
   it('GET with redirect should be followed', function(done) {

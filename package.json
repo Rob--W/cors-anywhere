@@ -30,8 +30,8 @@
     "istanbul": "^0.4.2",
     "lolex": "^1.5.0",
     "mocha": "^3.4.2",
-    "nock": "~1.9.0",
-    "supertest": "~0.15.0"
+    "nock": "^8.2.1",
+    "supertest": "^2.0.1"
   },
   "scripts": {
     "lint": "eslint .",
@@ -39,7 +39,7 @@
     "test-coverage": "istanbul cover ./node_modules/.bin/_mocha -- test/test.js test/test-ratelimit.js --reporter spec"
   },
   "engines": {
-    "node": ">=0.6.6",
+    "node": ">=0.10.0",
     "npm": ">=1.1.0"
   }
 }
