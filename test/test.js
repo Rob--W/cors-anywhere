@@ -50,6 +50,7 @@ describe('Basic functionality', function() {
       .get('/')
       .type('text/plain')
       .expect('Access-Control-Allow-Origin', '*')
+      .expect('Access-Control-Max-Age', '0')
       .expect(200, helpText, done);
   });
 
@@ -91,6 +92,7 @@ describe('Basic functionality', function() {
     request(cors_anywhere)
       .get('/example.com')
       .expect('Access-Control-Allow-Origin', '*')
+      .expect('Access-Control-Max-Age', '0')
       .expect('x-request-url', 'http://example.com/')
       .expect(200, 'Response from example.com', done);
   });
@@ -813,7 +815,7 @@ describe('setHeaders + removeHeaders', function() {
 describe('Access-Control-Max-Age set', function() {
   before(function() {
     cors_anywhere = createServer({
-      maxAge: 600,
+      corsMaxAge: 600,
     });
     cors_anywhere_port = cors_anywhere.listen(0).address().port;
   });
@@ -833,13 +835,15 @@ describe('Access-Control-Max-Age set', function() {
       .get('/example.com')
       .expect('Access-Control-Allow-Origin', '*')
       .expect('Access-Control-Max-Age', '600')
-      .expect(200, 'Response from example.com', done);;
+      .expect(200, 'Response from example.com', done);
   });
 });
 
 describe('Access-Control-Max-Age not set', function() {
   before(function() {
-    cors_anywhere = createServer();
+    cors_anywhere = createServer({
+      corsMaxAge: null,
+    });
     cors_anywhere_port = cors_anywhere.listen(0).address().port;
   });
   after(stopServer);
