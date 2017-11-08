@@ -332,6 +332,28 @@ describe('Proxy errors', function() {
     });
   });
 
+  var bad_status_http_server;
+  var bad_status_http_server_url;
+  before(function() {
+    bad_status_http_server = require('net').createServer(function(socket) {
+      socket.setEncoding('utf-8');
+      socket.on('data', function(data) {
+        if (data.indexOf('\r\n') >= 0) {
+          // Assume end of headers.
+          socket.write('HTTP/1.0 0\r\n');
+          socket.write('Content-Length: 0\r\n');
+          socket.end('\r\n');
+        }
+      });
+    });
+    bad_status_http_server_url = 'http://127.0.0.1:' + bad_status_http_server.listen(0).address().port;
+  });
+  after(function(done) {
+    bad_status_http_server.close(function() {
+      done();
+    });
+  });
+
   var bad_tcp_server;
   var bad_tcp_server_url;
   before(function() {
@@ -367,6 +389,13 @@ describe('Proxy errors', function() {
       .get('/' + bad_http_server_url)
       .expect('Access-Control-Allow-Origin', '*')
       .expect(404, 'Not found because of proxy error: Error: Parse Error', done);
+  });
+
+  it('Invalid HTTP status code', function(done) {
+    request(cors_anywhere)
+      .get('/' + bad_status_http_server_url)
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(404, 'Not found because of proxy error: RangeError: Invalid status code: 0', done);
   });
 
   it('Content-Encoding invalid body', function(done) {
