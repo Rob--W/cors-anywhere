@@ -392,6 +392,16 @@ describe('Proxy errors', function() {
   });
 
   it('Invalid HTTP status code', function(done) {
+    // Strict HTTP status validation was introduced in Node 4.5.5+, 5.11.0+.
+    // https://github.com/nodejs/node/pull/6291
+    var nodev = process.versions.node.split('.').map(function(v) { return parseInt(v); });
+    if (nodev[0] < 4 ||
+        nodev[0] === 4 && nodev[1] < 5 ||
+        nodev[0] === 4 && nodev[1] === 5 && nodev[2] < 5 ||
+        nodev[0] === 5 && nodev[1] < 11) {
+      this.skip();
+    }
+
     var errorMessage = 'RangeError [ERR_HTTP_INVALID_STATUS_CODE]: Invalid status code: 0';
     if (parseInt(process.versions.node, 10) < 9) {
       errorMessage = 'RangeError: Invalid status code: 0';
