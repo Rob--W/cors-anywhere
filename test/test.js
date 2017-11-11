@@ -392,10 +392,14 @@ describe('Proxy errors', function() {
   });
 
   it('Invalid HTTP status code', function(done) {
+    var errorMessage = 'RangeError [ERR_HTTP_INVALID_STATUS_CODE]: Invalid status code: 0';
+    if (parseInt(process.versions.node, 10) < 9) {
+      errorMessage = 'RangeError: Invalid status code: 0';
+    }
     request(cors_anywhere)
       .get('/' + bad_status_http_server_url)
       .expect('Access-Control-Allow-Origin', '*')
-      .expect(404, 'Not found because of proxy error: RangeError: Invalid status code: 0', done);
+      .expect(404, 'Not found because of proxy error: ' + errorMessage, done);
   });
 
   it('Content-Encoding invalid body', function(done) {
