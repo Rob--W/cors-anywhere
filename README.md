@@ -89,27 +89,32 @@ proxy requests. The following options are supported:
 * function `getProxyForUrl` - If set, specifies which intermediate proxy to use for a given URL.
   If the return value is void, a direct request is sent. The default implementation is
   [`proxy-from-env`](https://github.com/Rob--W/proxy-from-env), which respects the standard proxy
-  environment variables (e.g. `https_proxy`, `no_proxy`, etc.).  
-* array of strings `originBlacklist` - If set, requests whose origin is listed are blocked.  
+  environment variables (e.g. `https_proxy`, `no_proxy`, etc.).
+* array of strings `originBlacklist` - If set, requests whose origin is listed are blocked.
   Example: `['https://bad.example.com', 'http://bad.example.com']`
-* array of strings `originWhitelist` - If set, requests whose origin is not listed are blocked.  
+* array of strings `originWhitelist` - If set, requests whose origin is not listed are blocked.
   If this list is empty, all origins are allowed.
+  Example: `['https://good.example.com', 'http://good.example.com']`
+* array of strings `targetBlacklist` - If set, requests whose target is listed are blocked.
+  Example: `['https://bad.example.com', 'http://bad.example.com']`
+* array of strings `targtWhitelist` - If set, requests whose target is not listed are blocked.
+  If this list is empty, all targets are allowed.
   Example: `['https://good.example.com', 'http://good.example.com']`
 * function `checkRateLimit` - If set, it is called with the origin (string) of the request. If this
   function returns a non-empty string, the request is rejected and the string is send to the client.
 * boolean `redirectSameOrigin` - If true, requests to URLs from the same origin will not be proxied but redirected.
   The primary purpose for this option is to save server resources by delegating the request to the client
   (since same-origin requests should always succeed, even without proxying).
-* array of strings `requireHeader` - If set, the request must include this header or the API will refuse to proxy.  
-  Recommended if you want to prevent users from using the proxy for normal browsing.  
+* array of strings `requireHeader` - If set, the request must include this header or the API will refuse to proxy.
+  Recommended if you want to prevent users from using the proxy for normal browsing.
   Example: `['Origin', 'X-Requested-With']`.
-* array of lowercase strings `removeHeaders` - Exclude certain headers from being included in the request.  
+* array of lowercase strings `removeHeaders` - Exclude certain headers from being included in the request.
   Example: `["cookie"]`
-* dictionary of lowercase strings `setHeaders` - Set headers for the request (overwrites existing ones).  
+* dictionary of lowercase strings `setHeaders` - Set headers for the request (overwrites existing ones).
   Example: `{"x-powered-by": "CORS Anywhere"}`
-* number `corsMaxAge` - If set, an Access-Control-Max-Age request header with this value (in seconds) will be added.  
+* number `corsMaxAge` - If set, an Access-Control-Max-Age request header with this value (in seconds) will be added.
   Example: `600` - Allow CORS preflight request to be cached by the browser for 10 minutes.
-* string `helpFile` - Set the help file (shown at the homepage).  
+* string `helpFile` - Set the help file (shown at the homepage).
   Example: `"myCustomHelpText.txt"`
 
 For advanced users, the following options are also provided.
@@ -142,6 +147,13 @@ export CORSANYWHERE_WHITELIST=https://example.com,http://example.com,http://exam
 node server.js
 ```
 
+Similarly, to run a CORS Anywhere server that proxies only to example.com sites on port 8080, use:
+```
+export PORT=8080
+export CORSANYWHERE_WHITELIST_TARGET=https://example.com,http://example.com,http://example.com:8080
+node server.js
+```
+
 This application can immediately be run on Heroku, see https://devcenter.heroku.com/articles/nodejs
 for instructions. Note that their [Acceptable Use Policy](https://www.heroku.com/policy/aup) forbids
 the use of Heroku for operating an open proxy, so make sure that you either enforce a whitelist as
@@ -157,6 +169,12 @@ export CORSANYWHERE_RATELIMIT='50 3 my.example.com my2.example.com'
 node server.js
 ```
 
+To enable proxying to all sites except to example.com, use:
+```
+export PORT=8080
+export CORSANYWHERE_BLACKLIST_TARGET=https://example.com,http://example.com
+node server.js
+```
 
 ## License
 
