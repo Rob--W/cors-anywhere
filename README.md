@@ -97,7 +97,7 @@ proxy requests. The following options are supported:
   Example: `['https://good.example.com', 'http://good.example.com']`
 * array of strings `targetBlacklist` - If set, requests whose target is listed are blocked.
   Example: `['https://bad.example.com', 'http://bad.example.com']`
-* array of strings `targtWhitelist` - If set, requests whose target is not listed are blocked.
+* array of strings `targetWhitelist` - If set, requests whose target is not listed are blocked.
   If this list is empty, all targets are allowed.
   Example: `['https://good.example.com', 'http://good.example.com']`
 * function `checkRateLimit` - If set, it is called with the origin (string) of the request. If this
