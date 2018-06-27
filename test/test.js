@@ -482,6 +482,76 @@ describe('server on https', function() {
   });
 });
 
+describe('target with invalid https configuration', function() {
+  afterEach(stopServer);
+
+  var E_CERT_HAS_EXPIRED; // "Error: certificate has expired"
+  var bad_https_server;
+  var bad_https_server_url;
+  before(function(done) {
+    bad_https_server = require('https').createServer({
+      // The certificate of the test server has already expired.
+      key: fs.readFileSync(path.join(__dirname, 'key.pem')),
+      cert: fs.readFileSync(path.join(__dirname, 'cert.pem')),
+    }, function(req, res) {
+      res.writeHead(200);
+      res.end('Response with expired certificate.');
+    });
+    bad_https_server_url = 'https://127.0.0.1:' + bad_https_server.listen(0).address().port;
+
+    require('tls').connect({
+      port: bad_https_server.address().port,
+      rejectUnauthorized: true,
+    }).on('error', function(err) {
+      E_CERT_HAS_EXPIRED = String(err);
+      done();
+    });
+  });
+  after(function(done) {
+    bad_https_server.close(function() {
+      done();
+    });
+  });
+
+  it('default configuration should reject invalid https certificate', function(done) {
+    cors_anywhere = createServer();
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+
+    request(cors_anywhere)
+      .get('/' + bad_https_server_url)
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(404, 'Not found because of proxy error: ' + E_CERT_HAS_EXPIRED, done);
+  });
+
+  it('httpProxyOptions.secure=false should allow invalid https certificate', function(done) {
+    cors_anywhere = createServer({
+      httpProxyOptions: {
+        secure: false,
+      },
+    });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+
+    request(cors_anywhere)
+      .get('/' + bad_https_server_url)
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'Response with expired certificate.', done);
+  });
+
+  it('httpProxyOptions.secure=true should reject invalid https certificate', function(done) {
+    cors_anywhere = createServer({
+      httpProxyOptions: {
+        secure: true,
+      },
+    });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+
+    request(cors_anywhere)
+      .get('/' + bad_https_server_url)
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(404, 'Not found because of proxy error: ' + E_CERT_HAS_EXPIRED, done);
+  });
+});
+
 describe('originBlacklist', function() {
   before(function() {
     cors_anywhere = createServer({
