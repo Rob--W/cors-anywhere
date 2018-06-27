@@ -486,6 +486,7 @@ describe('target with invalid https configuration', function() {
   afterEach(stopServer);
 
   var E_CERT_HAS_EXPIRED; // "Error: certificate has expired"
+  var NODE_TLS_REJECT_UNAUTHORIZED = process.env.NODE_TLS_REJECT_UNAUTHORIZED;
   var bad_https_server;
   var bad_https_server_url;
   before(function(done) {
@@ -508,9 +509,18 @@ describe('target with invalid https configuration', function() {
     });
   });
   after(function(done) {
+    if (NODE_TLS_REJECT_UNAUTHORIZED === undefined) {
+      delete process.env.NODE_TLS_REJECT_UNAUTHORIZED;
+    } else {
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = NODE_TLS_REJECT_UNAUTHORIZED;
+    }
     bad_https_server.close(function() {
       done();
     });
+  });
+
+  beforeEach(function() {
+    delete process.env.NODE_TLS_REJECT_UNAUTHORIZED;
   });
 
   it('default configuration should reject invalid https certificate', function(done) {
@@ -523,7 +533,32 @@ describe('target with invalid https configuration', function() {
       .expect(404, 'Not found because of proxy error: ' + E_CERT_HAS_EXPIRED, done);
   });
 
+  it('NODE_TLS_REJECT_UNAUTHORIZED=0 should allow invalid https certificate', function(done) {
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+    cors_anywhere = createServer();
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+
+    request(cors_anywhere)
+      .get('/' + bad_https_server_url)
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'Response with expired certificate.', done);
+  });
+
+  it('NODE_TLS_REJECT_UNAUTHORIZED=1 should reject invalid https certificate', function(done) {
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '1';
+    cors_anywhere = createServer();
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+
+    request(cors_anywhere)
+      .get('/' + bad_https_server_url)
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(404, 'Not found because of proxy error: ' + E_CERT_HAS_EXPIRED, done);
+  });
+
   it('httpProxyOptions.secure=false should allow invalid https certificate', function(done) {
+    // The httpProxyOptions.secure option should take precedence.
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '1';
+
     cors_anywhere = createServer({
       httpProxyOptions: {
         secure: false,
@@ -538,6 +573,9 @@ describe('target with invalid https configuration', function() {
   });
 
   it('httpProxyOptions.secure=true should reject invalid https certificate', function(done) {
+    // The httpProxyOptions.secure option should take precedence.
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
     cors_anywhere = createServer({
       httpProxyOptions: {
         secure: true,
