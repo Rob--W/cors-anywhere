@@ -34,6 +34,7 @@ cors_proxy.createServer({
     'x-heroku-dynos-in-use',
     'x-request-start',
   ],
+  setHeaders: {"access-control-allow-origin":originWhitelist[0]},
   redirectSameOrigin: true,
   httpProxyOptions: {
     // Do not add X-Forwarded-For, etc. headers, because Heroku already adds it.
