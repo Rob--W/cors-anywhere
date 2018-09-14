@@ -34,13 +34,13 @@ cors_proxy.createServer({
     'x-heroku-dynos-in-use',
     'x-request-start',
   ],
-  setHeaders: {"access-control-allow-origin":originWhitelist[0]},
   redirectSameOrigin: true,
   httpProxyOptions: {
     // Do not add X-Forwarded-For, etc. headers, because Heroku already adds it.
     xfwd: false,
   },
 }).listen(port, host, function() {
+  console.log(originWhitelist[0])
   console.log('White listing: '+originWhitelist);
   console.log('Running CORS Anywhere on ' + host + ':' + port);
 });
