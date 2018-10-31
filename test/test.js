@@ -420,6 +420,32 @@ describe('Proxy errors', function() {
       .expect('Access-Control-Allow-Origin', '*')
       .expect(418, '', done);
   });
+
+  it('Invalid header values', function(done) {
+    if (parseInt(process.versions.node, 10) < 6) {
+      // >=6.0.0: https://github.com/nodejs/node/commit/7bef1b790727430cb82bf8be80cfe058480de100
+      this.skip();
+    }
+    // >=9.0.0: https://github.com/nodejs/node/commit/11a2ca29babcb35132e7d93244b69c544d52dfe4
+    var errorMessage = 'TypeError [ERR_INVALID_CHAR]: Invalid character in header content ["headername"]';
+    if (parseInt(process.versions.node, 10) < 9) {
+      // >=6.0.0, <9.0.0: https://github.com/nodejs/node/commit/7bef1b790727430cb82bf8be80cfe058480de100
+      errorMessage = 'TypeError: The header content contains invalid characters';
+    }
+    stopServer(function() {
+      cors_anywhere = createServer({
+        // Setting an invalid header below in request(...).set(...) would trigger
+        // a header validation error in superagent. So we use setHeaders to test
+        // the attempt to proxy a request with invalid request headers.
+        setHeaders: {headername: 'invalid\x01value'},
+      });
+      cors_anywhere_port = cors_anywhere.listen(0).address().port;
+      request(cors_anywhere)
+        .get('/' + bad_tcp_server_url) // Any URL that isn't intercepted by Nock would do.
+        .expect('Access-Control-Allow-Origin', '*')
+        .expect(404, 'Not found because of proxy error: ' + errorMessage, done);
+    });
+  });
 });
 
 describe('server on https', function() {
