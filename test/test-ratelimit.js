@@ -218,11 +218,11 @@ describe('Rate limit', function() {
   it('bad input', function() {
     assert.throws(function() {
       createRateLimitChecker('0 1 /');
-    }, 'Invalid CORSANYWHERE_RATELIMIT. Regex at index 0 must start and end with a slash ("/").');
+    }, /Invalid CORSANYWHERE_RATELIMIT\. Regex at index 0 must start and end with a slash \("\/"\)\./);
 
     assert.throws(function() {
-      createRateLimitChecker('0 1 a,/');
-    }, 'Invalid CORSANYWHERE_RATELIMIT. Regex at index 1 must start and end with a slash ("/").');
+      createRateLimitChecker('0 1 a /');
+    }, /Invalid CORSANYWHERE_RATELIMIT\. Regex at index 1 must start and end with a slash \("\/"\)\./);
 
     assert.throws(function() {
       createRateLimitChecker('0 1 /(/');
