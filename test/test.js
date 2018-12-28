@@ -664,83 +664,134 @@ describe('redirectSameOrigin', function() {
   });
   after(stopServer);
 
-  ['Origin', 'Referer'].forEach(function(header) {
-    it('GET /example.com with ' + header + ': http://example.com', function(done) {
-      request(cors_anywhere)
-        .get('/example.com/')
-        .set(header, 'http://example.com')
-        .expect('Access-Control-Allow-Origin', '*')
-        .expect('Cache-Control', 'private')
-        .expect('Vary', 'origin')
-        .expect('Location', 'http://example.com/')
-        .expect(301, done);
-    });
+  it('GET /example.com with Origin: http://example.com', function(done) {
+    request(cors_anywhere)
+      .get('/example.com/')
+      .set('Origin', 'http://example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect('Cache-Control', 'private')
+      .expect('Vary', 'origin')
+      .expect('Location', 'http://example.com/')
+      .expect(301, done);
   });
 
-  ['Origin', 'Referer'].forEach(function(header) {
-    it('GET /example.com with ' + header + ': https://example.com', function(done) {
-      // Not same-origin because of different schemes.
-      request(cors_anywhere)
-        .get('/example.com/')
-        .set(header, 'https://example.com')
-        .expect('Access-Control-Allow-Origin', '*')
-        .expect(200, 'Response from example.com', done);
-    });
+  it('GET /example.com with Origin: https://example.com', function(done) {
+    // Not same-origin because of different schemes.
+    request(cors_anywhere)
+      .get('/example.com/')
+      .set('Origin', 'https://example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'Response from example.com', done);
   });
 
-  ['Origin', 'Referer'].forEach(function(header) {
-    it('GET /example.com with ' + header + ': http://example.com:1234', function(done) {
-      // Not same-origin because of different ports.
-      request(cors_anywhere)
-        .get('/example.com/')
-        .set(header, 'http://example.com:1234')
-        .expect('Access-Control-Allow-Origin', '*')
-        .expect(200, 'Response from example.com', done);
-    });
+  it('GET /example.com with Origin: http://example.com:1234', function(done) {
+    // Not same-origin because of different ports.
+    request(cors_anywhere)
+      .get('/example.com/')
+      .set('Origin', 'http://example.com:1234')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'Response from example.com', done);
   });
 
-  ['Origin', 'Referer'].forEach(function(header) {
-    it('GET /example.com:1234 with ' + header + ': http://example.com', function(done) {
-      // Not same-origin because of different ports.
-      request(cors_anywhere)
-        .get('/example.com:1234/')
-        .set(header, 'http://example.com')
-        .expect('Access-Control-Allow-Origin', '*')
-        .expect(200, 'Response from example.com:1234', done);
-    });
+  it('GET /example.com:1234 with Origin: http://example.com', function(done) {
+    // Not same-origin because of different ports.
+    request(cors_anywhere)
+      .get('/example.com:1234/')
+      .set('Origin', 'http://example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'Response from example.com:1234', done);
   });
 
-  ['Origin', 'Referer'].forEach(function(header) {
-    it('GET /example.com with ' + header + ': http://example.com.test', function(done) {
-      // Not same-origin because of different host names.
-      request(cors_anywhere)
-        .get('/example.com/')
-        .set(header, 'http://example.com.test')
-        .expect('Access-Control-Allow-Origin', '*')
-        .expect(200, 'Response from example.com', done);
-    });
+  it('GET /example.com with Origin: http://example.com.test', function(done) {
+    // Not same-origin because of different host names.
+    request(cors_anywhere)
+      .get('/example.com/')
+      .set('Origin', 'http://example.com.test')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'Response from example.com', done);
   });
 
-  ['Origin', 'Referer'].forEach(function(header) {
-    it('GET /example.com.com with ' + header + ': http://example.com', function(done) {
-      // Not same-origin because of different host names.
-      request(cors_anywhere)
-        .get('/example.com.com/')
-        .set(header, 'http://example.com')
-        .expect('Access-Control-Allow-Origin', '*')
-        .expect(200, 'Response from example.com.com', done);
-    });
+  it('GET /example.com.com with Origin: http://example.com', function(done) {
+    // Not same-origin because of different host names.
+    request(cors_anywhere)
+      .get('/example.com.com/')
+      .set('Origin', 'http://example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'Response from example.com.com', done);
   });
 
-  ['Origin', 'Referer'].forEach(function(header) {
-    it('GET /prefix.example.com with ' + header + ': http://example.com', function(done) {
-      // Not same-origin because of different host names.
-      request(cors_anywhere)
-        .get('/prefix.example.com/')
-        .set(header, 'http://example.com')
-        .expect('Access-Control-Allow-Origin', '*')
-        .expect(200, 'Response from prefix.example.com', done);
-    });
+  it('GET /prefix.example.com with Origin: http://example.com', function(done) {
+    // Not same-origin because of different host names.
+    request(cors_anywhere)
+      .get('/prefix.example.com/')
+      .set('Origin', 'http://example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'Response from prefix.example.com', done);
+  });
+
+  it('GET /example.com with Referer: http://example.com', function(done) {
+    request(cors_anywhere)
+      .get('/example.com/')
+      .set('Referer', 'http://example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect('Cache-Control', 'private')
+      .expect('Vary', 'origin')
+      .expect('Location', 'http://example.com/')
+      .expect(301, done);
+  });
+
+  it('GET /example.com with Referer: https://example.com', function(done) {
+    // Not same-origin because of different schemes.
+    request(cors_anywhere)
+      .get('/example.com/')
+      .set('Referer', 'https://example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'Response from example.com', done);
+  });
+
+  it('GET /example.com with Referer: http://example.com:1234', function(done) {
+    // Not same-origin because of different ports.
+    request(cors_anywhere)
+      .get('/example.com/')
+      .set('Referer', 'http://example.com:1234')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'Response from example.com', done);
+  });
+
+  it('GET /example.com:1234 with Referer: http://example.com', function(done) {
+    // Not same-origin because of different ports.
+    request(cors_anywhere)
+      .get('/example.com:1234/')
+      .set('Referer', 'http://example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'Response from example.com:1234', done);
+  });
+
+  it('GET /example.com with Referer: http://example.com.test', function(done) {
+    // Not same-origin because of different host names.
+    request(cors_anywhere)
+      .get('/example.com/')
+      .set('Referer', 'http://example.com.test')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'Response from example.com', done);
+  });
+
+  it('GET /example.com.com with Referer: http://example.com', function(done) {
+    // Not same-origin because of different host names.
+    request(cors_anywhere)
+      .get('/example.com.com/')
+      .set('Referer', 'http://example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'Response from example.com.com', done);
+  });
+
+  it('GET /prefix.example.com with Referer: http://example.com', function(done) {
+    // Not same-origin because of different host names.
+    request(cors_anywhere)
+      .get('/prefix.example.com/')
+      .set('Referer', 'http://example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, 'Response from prefix.example.com', done);
   });
 });
 
