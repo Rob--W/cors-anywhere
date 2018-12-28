@@ -664,7 +664,7 @@ describe('redirectSameOrigin', function() {
   });
   after(stopServer);
 
-  ['Origin', 'Referer'].forEach(header =>
+  ['Origin', 'Referer'].forEach(function(header) {
     it('GET /example.com with ' + header + ': http://example.com', function(done) {
       request(cors_anywhere)
         .get('/example.com/')
@@ -674,10 +674,10 @@ describe('redirectSameOrigin', function() {
         .expect('Vary', 'origin')
         .expect('Location', 'http://example.com/')
         .expect(301, done);
-    })
-  );
+    });
+  });
 
-  ['Origin', 'Referer'].forEach(header =>
+  ['Origin', 'Referer'].forEach(function(header) {
     it('GET /example.com with ' + header + ': https://example.com', function(done) {
       // Not same-origin because of different schemes.
       request(cors_anywhere)
@@ -685,10 +685,10 @@ describe('redirectSameOrigin', function() {
         .set(header, 'https://example.com')
         .expect('Access-Control-Allow-Origin', '*')
         .expect(200, 'Response from example.com', done);
-    })
-  );
+    });
+  });
 
-  ['Origin', 'Referer'].forEach(header =>
+  ['Origin', 'Referer'].forEach(function(header) {
     it('GET /example.com with ' + header + ': http://example.com:1234', function(done) {
       // Not same-origin because of different ports.
       request(cors_anywhere)
@@ -696,10 +696,10 @@ describe('redirectSameOrigin', function() {
         .set(header, 'http://example.com:1234')
         .expect('Access-Control-Allow-Origin', '*')
         .expect(200, 'Response from example.com', done);
-    })
-  );
+    });
+  });
 
-  ['Origin', 'Referer'].forEach(header =>
+  ['Origin', 'Referer'].forEach(function(header) {
     it('GET /example.com:1234 with ' + header + ': http://example.com', function(done) {
       // Not same-origin because of different ports.
       request(cors_anywhere)
@@ -707,10 +707,10 @@ describe('redirectSameOrigin', function() {
         .set(header, 'http://example.com')
         .expect('Access-Control-Allow-Origin', '*')
         .expect(200, 'Response from example.com:1234', done);
-    })
-  );
+    });
+  });
 
-  ['Origin', 'Referer'].forEach(header =>
+  ['Origin', 'Referer'].forEach(function(header) {
     it('GET /example.com with ' + header + ': http://example.com.test', function(done) {
       // Not same-origin because of different host names.
       request(cors_anywhere)
@@ -718,10 +718,10 @@ describe('redirectSameOrigin', function() {
         .set(header, 'http://example.com.test')
         .expect('Access-Control-Allow-Origin', '*')
         .expect(200, 'Response from example.com', done);
-    })
-  );
+    });
+  });
 
-  ['Origin', 'Referer'].forEach(header =>
+  ['Origin', 'Referer'].forEach(function(header) {
     it('GET /example.com.com with ' + header + ': http://example.com', function(done) {
       // Not same-origin because of different host names.
       request(cors_anywhere)
@@ -729,10 +729,10 @@ describe('redirectSameOrigin', function() {
         .set(header, 'http://example.com')
         .expect('Access-Control-Allow-Origin', '*')
         .expect(200, 'Response from example.com.com', done);
-    })
-  );
+    });
+  });
 
-  ['Origin', 'Referer'].forEach(header =>
+  ['Origin', 'Referer'].forEach(function(header) {
     it('GET /prefix.example.com with ' + header + ': http://example.com', function(done) {
       // Not same-origin because of different host names.
       request(cors_anywhere)
@@ -740,8 +740,8 @@ describe('redirectSameOrigin', function() {
         .set(header, 'http://example.com')
         .expect('Access-Control-Allow-Origin', '*')
         .expect(200, 'Response from prefix.example.com', done);
-    })
-  );
+    });
+  });
 });
 
 describe('requireHeader', function() {
@@ -1154,7 +1154,7 @@ describe('handle Referer header formats to match Origin header format', function
   before(function() {
     cors_anywhere = createServer({
       requireHeader: ['referer'],
-      originWhitelist: 'http://example.com'
+      originWhitelist: 'http://example.com',
     });
     cors_anywhere_port = cors_anywhere.listen(0).address().port;
   });
@@ -1176,7 +1176,7 @@ describe('handle Referer header formats to match Origin header format', function
       .expect(200, done);
   });
 
-  it('GET /example.com with referer having a trailing / (origin referer policy)', function(done) {
+  it('GET /example.com with referer having a trailing /', function(done) {
     request(cors_anywhere)
       .get('/example.com/')
       .set('Referer', 'http://example.com/')
@@ -1184,7 +1184,7 @@ describe('handle Referer header formats to match Origin header format', function
       .expect(200, done);
   });
 
-  it('GET /example.com with referer having the full application path (origin-when-cross-origin referer policy if request is cross domain)', function(done) {
+  it('GET /example.com with referer having the full application path', function(done) {
     request(cors_anywhere)
       .get('/example.com/')
       .set('Referer', 'http://example.com/path/to/app')
