@@ -633,8 +633,7 @@ describe('checkRateLimit', function() {
       .get('/example.com/')
       .set('Origin', 'http://example.net:1234')
       .expect('Access-Control-Allow-Origin', '*')
-      .expect(429, done,
-          'The origin "http://example.net" has sent too many requests.\n[http://example.com:1234]');
+      .expect(429, 'The origin "http://example.net:1234" has sent too many requests.\n[http://example.net:1234]', done);
   });
 
   it('GET /example.com with rate-limit with referer fallback', function(done) {
@@ -650,8 +649,7 @@ describe('checkRateLimit', function() {
       .get('/example.com/')
       .set('Referer', 'http://example.net:1234')
       .expect('Access-Control-Allow-Origin', '*')
-      .expect(429, done,
-          'The origin "http://example.net" has sent too many requests.\n[http://example.com:1234]');
+      .expect(429, 'The origin "http://example.net:1234" has sent too many requests.\n[http://example.net:1234]', done);
   });
 });
 
