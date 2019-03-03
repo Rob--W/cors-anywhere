@@ -112,17 +112,6 @@ proxy requests. The following options are supported:
 * string `helpFile` - Set the help file (shown at the homepage).  
   Example: `"myCustomHelpText.txt"`
 
-For advanced users, the following options are also provided.
-
-* `httpProxyOptions` - Under the hood, [http-proxy](https://github.com/nodejitsu/node-http-proxy)
-  is used to proxy requests. Use this option if you really need to pass options
-  to http-proxy. The documentation for these options can be found [here](https://github.com/nodejitsu/node-http-proxy#options).
-* `httpsOptions` - If set, a `https.Server` will be created. The given options are passed to the
-  [`https.createServer`](https://nodejs.org/api/https.html#https_https_createserver_options_requestlistener) method.
-
-For even more advanced usage (building upon CORS Anywhere),
-see the sample code in [test/test-examples.js](test/test-examples.js).
-
 ### Demo server
 
 A public demo of CORS Anywhere is available at https://cors-anywhere.herokuapp.com. This server is
