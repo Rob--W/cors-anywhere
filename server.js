@@ -39,7 +39,7 @@ var serverOptions = {
     // Do not add X-Forwarded-For, etc. headers, because Heroku already adds it.
     xfwd: false,
   },
-}
+};
 var setUserAgent = process.env.CORSANYWHERE_USERAGENT;
 if (setUserAgent) {
   serverOptions.setHeaders = {
