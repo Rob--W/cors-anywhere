@@ -2,6 +2,9 @@
 var host = process.env.HOST || '0.0.0.0';
 // Listen on a specific port via the PORT environment variable
 var port = process.env.PORT || 8080;
+//used to create new PORT environment variable
+require('dotenv').config();
+var portHttps = process.env.PORT_https || 8088;
 
 // Grab the blacklist from the command-line so that we can update the blacklist without deploying
 // again. CORS Anywhere is open by design, and this blacklist is not used, except for countering
@@ -42,3 +45,35 @@ cors_proxy.createServer({
 }).listen(port, host, function() {
   console.log('Running CORS Anywhere on ' + host + ':' + port);
 });
+
+//forHttps
+
+var fs = require('fs');
+
+var cors_proxy_https = require('./lib/cors-anywhere');
+cors_proxy_https.createServer({
+      httpsOptions: {
+        key: fs.readFileSync('your_private.key', 'utf8'),//you must to setup your path for private.key and public.cert
+        cert: fs.readFileSync('your_public.cert', 'utf8')
+      },
+   originBlacklist: originBlacklist,
+   originWhitelist: originWhitelist,
+   requireHeader: ['origin', 'x-requested-with'],
+   checkRateLimit: checkRateLimit,
+    removeHeaders: [
+'cookie',
+'cookie2',
+// Strip Heroku-specific headers
+'x-heroku-queue-wait-time',
+'x-heroku-queue-depth',
+'x-heroku-dynos-in-use',
+'x-request-start',
+],
+     redirectSameOrigin: true,
+     httpProxyOptions: {
+     // Do not add X-Forwarded-For, etc. headers, because Heroku already adds it.
+         xfwd: false,
+     },
+    }).listen(portHttps, host, function() {
+     console.log('Running CORS Anywhere on ' + host + ':' + portHttps);
+   });
