@@ -119,6 +119,31 @@ describe('Basic functionality', function() {
       .expect(200, helpText, done);
   });
 
+  it('GET /http://:1234', function(done) {
+    // 'http://:1234' is an invalid URL.
+    request(cors_anywhere)
+      .get('/http://:1234')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, helpText, done);
+  });
+
+  it('GET /http:///', function(done) {
+    // 'http://:1234' is an invalid URL.
+    request(cors_anywhere)
+      .get('/http:///')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, helpText, done);
+  });
+
+  it('GET /http:/notenoughslashes', function(done) {
+    // 'http:/notenoughslashes' is an invalid URL.
+    request(cors_anywhere)
+      .get('/http:/notenoughslashes')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, helpText, done);
+  });
+
+
   it('GET ///example.com', function(done) {
     // API base URL (with trailing slash) + '//example.com'
     request(cors_anywhere)
