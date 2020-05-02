@@ -83,7 +83,8 @@ describe('memory usage', function() {
         cors_anywhere_child.send(null);
         return;
       }
-      http.request(request, function() {
+      http.request(request, function(res) {
+        res.destroy();
         requestAgain();
       }).on('error', function(error) {
         done(error);
