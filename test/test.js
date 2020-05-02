@@ -412,7 +412,10 @@ describe('Proxy errors', function() {
   it('Content-Length mismatch', function(done) {
     var errorMessage = 'Error: Parse Error: Invalid character in Content-Length';
     // <13.0.0: https://github.com/nodejs/node/commit/ba565a37349e81c9d2402b0c8ef05ab39dca8968
-    if (parseInt(process.versions.node, 10) < 13) {
+    // <12.7.0: https://github.com/nodejs/node/pull/28817
+    var nodev = process.versions.node.split('.').map(function(v) { return parseInt(v); });
+    if (nodev[0] < 12 ||
+        nodev[0] === 12 && nodev[1] < 7) {
       errorMessage = 'Error: Parse Error';
     }
     request(cors_anywhere)
