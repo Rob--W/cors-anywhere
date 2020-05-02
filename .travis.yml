@@ -6,6 +6,11 @@ node_js:
   - 7
   - 8
   - 9
+  - 11
+  - 12
+  - 13
+  - 13
+  - 14
 script:
   - npm run lint
   - npm run test

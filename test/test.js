@@ -385,10 +385,15 @@ describe('Proxy errors', function() {
   });
 
   it('Content-Length mismatch', function(done) {
+    var errorMessage = 'Error: Parse Error: Invalid character in Content-Length';
+    // <13.0.0: https://github.com/nodejs/node/commit/ba565a37349e81c9d2402b0c8ef05ab39dca8968
+    if (parseInt(process.versions.node, 10) < 13) {
+      errorMessage = 'Error: Parse Error';
+    }
     request(cors_anywhere)
       .get('/' + bad_http_server_url)
       .expect('Access-Control-Allow-Origin', '*')
-      .expect(404, 'Not found because of proxy error: Error: Parse Error', done);
+      .expect(404, 'Not found because of proxy error: ' + errorMessage, done);
   });
 
   it('Invalid HTTP status code', function(done) {
