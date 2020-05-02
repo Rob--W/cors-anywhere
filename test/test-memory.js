@@ -33,7 +33,7 @@ describe('memory usage', function() {
     // with the standard no-op http module.
     // args.push('use-http-instead-of-cors-anywhere');
     cors_anywhere_child = fork(cors_module_path, args, {
-      execArgv: ['--expose-gc'],
+      execArgv: ['--expose-gc', '--max-http-header-size=60000'],
     });
     cors_anywhere_child.once('message', function(cors_url) {
       cors_api_url = cors_url;
@@ -83,8 +83,7 @@ describe('memory usage', function() {
         cors_anywhere_child.send(null);
         return;
       }
-      http.request(request, function(res) {
-        res.destroy();
+      http.request(request, function() {
         requestAgain();
       }).on('error', function(error) {
         done(error);
