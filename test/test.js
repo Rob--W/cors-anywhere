@@ -246,6 +246,19 @@ describe('Basic functionality', function() {
       .expect(302, 'maybe found', done);
   });
 
+  it('GET with 302 redirect to an invalid Location should not be followed', function(done) {
+    // There is nothing to follow, so let the browser decide what to do with it.
+    request(cors_anywhere)
+      .get('/example.com/redirectinvalidlocation')
+      .redirects(0)
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect('x-request-url', 'http://example.com/redirectinvalidlocation')
+      .expect('x-final-url', 'http://example.com/redirectinvalidlocation')
+      .expect('access-control-expose-headers', /x-final-url/)
+      .expect('Location', 'http:///')
+      .expect(302, 'redirecting to junk...', done);
+  });
+
   it('POST with 307 redirect should not be handled', function(done) {
     // Because of implementation difficulties (having to keep the request body
     // in memory), handling HTTP 307/308 redirects is deferred to the requestor.
