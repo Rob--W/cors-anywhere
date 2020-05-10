@@ -344,6 +344,13 @@ describe('Basic functionality', function() {
       .expectNoHeader('set-cookie')
       .expectNoHeader('set-cookie2', done);
   });
+
+  it('Mock a http status response if requested in the headers', function (done) {
+    request(cors_anywhere)
+      .get('/example.com/mockhttpstatus')
+      .set('mock-http-response-code', '200')
+      .expect(200, '', done);
+  });
 });
 
 describe('Proxy errors', function() {
