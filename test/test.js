@@ -308,6 +308,7 @@ describe('Basic functionality', function() {
       .expectJSON({
         host: 'example.com',
         'x-forwarded-port': String(cors_anywhere_port),
+        'x-forwarded-host': '127.0.0.1:' + cors_anywhere_port,
         'x-forwarded-proto': 'http',
       }, done);
   });
@@ -320,6 +321,7 @@ describe('Basic functionality', function() {
       .expectJSON({
         host: 'example.com:1337',
         'x-forwarded-port': String(cors_anywhere_port),
+        'x-forwarded-host': '127.0.0.1:' + cors_anywhere_port,
         'x-forwarded-proto': 'http',
       }, done);
   });
@@ -332,6 +334,7 @@ describe('Basic functionality', function() {
       .expectJSON({
         host: 'example.com',
         'x-forwarded-port': String(cors_anywhere_port),
+        'x-forwarded-host': '127.0.0.1:' + cors_anywhere_port,
         'x-forwarded-proto': 'http',
       }, done);
   });
@@ -525,6 +528,7 @@ describe('server on https', function() {
       .expectJSON({
         host: 'example.com',
         'x-forwarded-port': String(cors_anywhere_port),
+        'x-forwarded-host': '127.0.0.1:' + cors_anywhere_port,
         'x-forwarded-proto': 'https',
       }, done);
   });
@@ -537,6 +541,7 @@ describe('server on https', function() {
       .expectJSON({
         host: 'example.com',
         'x-forwarded-port': String(cors_anywhere_port),
+        'x-forwarded-host': '127.0.0.1:' + cors_anywhere_port,
         'x-forwarded-proto': 'https',
       }, done);
   });
@@ -549,6 +554,7 @@ describe('server on https', function() {
       .expectJSON({
         host: 'example.com:1337',
         'x-forwarded-port': String(cors_anywhere_port),
+        'x-forwarded-host': '127.0.0.1:' + cors_anywhere_port,
         'x-forwarded-proto': 'https',
       }, done);
   });

@@ -41,6 +41,7 @@ function echoheaders(origin) {
       if (!('test-include-xfwd' in headers)) {
         excluded_headers.push('x-forwarded-port');
         excluded_headers.push('x-forwarded-proto');
+        excluded_headers.push('x-forwarded-host');
       }
       var response = {};
       Object.keys(headers).forEach(function(name) {
