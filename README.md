@@ -43,6 +43,9 @@ Live examples:
 * https://cors-anywhere.herokuapp.com/
 * https://robwu.nl/cors-anywhere.html - This demo shows how to use the API.
 
+## Deploy to Heroku
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 ## Documentation
 
 ### Client
