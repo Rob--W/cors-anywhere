@@ -49,6 +49,26 @@ describe('Examples', function() {
       .expect(200, 'Response from example.com', done);
   });
 
+  it('Rewrite proxy URL with url as param', function(done) {
+    var cors_anywhere = createServer();
+
+    var http_server = http.createServer(function(req, res) {
+      // For testing, check whether req.url is the same as what we input below.
+      assert.strictEqual(req.url, '/dummy-for-testing');
+
+      // Basic example: Always proxy example.com.
+      req.url = '/?url=http://example.com';
+
+      cors_anywhere.emit('request', req, res);
+    });
+
+    request(http_server)
+      .get('/dummy-for-testing')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect('x-request-url', 'http://example.com/')
+      .expect(200, 'Response from example.com', done);
+  });
+
   it('Transform response to uppercase (streaming)', function(done) {
     var cors_anywhere = createServer();
 
