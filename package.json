@@ -47,5 +47,6 @@
   },
   "engines": {
     "node": ">=0.10.0"
-  }
+  },
+  "types": "./lib/cors-anywhere.d.ts"
 }
