@@ -892,6 +892,25 @@ describe('setHeaders', function() {
   });
 });
 
+describe('setParams', function() {
+  before(function() {
+    cors_anywhere = createServer({
+      setParams: {test: '123'},
+    });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+  });
+  after(stopServer);
+
+  it('GET /example.com', function(done) {
+    request(cors_anywhere)
+    .get('/example.com')
+    .expect('Access-Control-Allow-Origin', '*')
+    .expect(200, 'Response from example.com', done);
+  });
+
+});
+
+
 describe('setHeaders + removeHeaders', function() {
   before(function() {
     // setHeaders takes precedence over removeHeaders
