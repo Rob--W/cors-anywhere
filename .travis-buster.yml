@@ -1,0 +1,17 @@
+language: shell
+
+services:
+  - docker
+
+before_install:
+  - docker pull node:current-buster
+
+install:
+  - docker run -w $(pwd) -v $(pwd):$(pwd) node:current-buster /bin/sh -c "npm install"
+
+script:
+  #- docker run -w /home/travis -v $(pwd):$(pwd) node:current-buster /bin/sh -c "npm run lint"
+  - docker run -w $(pwd) -v $(pwd):$(pwd) node:current-buster /bin/sh -c "npm run lint"
+  - docker run -w $(pwd) -v $(pwd):$(pwd) node:current-buster /bin/sh -c "npm run test"
+  - docker run -w $(pwd) -v $(pwd):$(pwd) node:current-buster /bin/sh -c "npm run test-coverage && cat coverage/lcov.info | ./node_modules/.bin/coveralls && rm -rf coverage"
+  
