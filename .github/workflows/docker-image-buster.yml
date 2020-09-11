@@ -12,6 +12,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: docker pull node:current-buster
       run: docker pull node:current-buster
+    - name: npm run install
+      run: docker run -w $(pwd) -v $(pwd):$(pwd) node:current-buster /bin/sh -c "npm run install"
     - name: npm run lint
       run: docker run -w $(pwd) -v $(pwd):$(pwd) node:current-buster /bin/sh -c "npm run lint"
     - name: npm run test
