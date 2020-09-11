@@ -1,0 +1,22 @@
+name: Docker-Image-CI-buster
+
+on: [push, pull_request]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: docker pull node:current-buster
+      run: docker pull node:current-buster
+    - name: npm run install
+      run: docker run -w $(pwd) -v $(pwd):$(pwd) node:current-buster /bin/sh -c "npm install"
+    - name: npm run lint
+      run: docker run -w $(pwd) -v $(pwd):$(pwd) node:current-buster /bin/sh -c "npm run lint"
+    - name: npm run test
+      run: docker run -w $(pwd) -v $(pwd):$(pwd) node:current-buster /bin/sh -c "npm run test"
+#fixme    - name: npm run test-coverage
+#fixme      run: docker run -w $(pwd) -v $(pwd):$(pwd) node:current-buster /bin/sh -c "npm run test-coverage && cat coverage/lcov.info | ./node_modules/.bin/coveralls && rm -rf coverage"
