@@ -18,5 +18,5 @@ jobs:
       run: docker run -w $(pwd) -v $(pwd):$(pwd) node:current-buster /bin/sh -c "npm run lint"
     - name: npm run test
       run: docker run -w $(pwd) -v $(pwd):$(pwd) node:current-buster /bin/sh -c "npm run test"
-    - name: npm run test-coverage
-      run: docker run -w $(pwd) -v $(pwd):$(pwd) node:current-buster /bin/sh -c "npm run test-coverage && cat coverage/lcov.info | ./node_modules/.bin/coveralls && rm -rf coverage"
+#fixme    - name: npm run test-coverage
+#fixme      run: docker run -w $(pwd) -v $(pwd):$(pwd) node:current-buster /bin/sh -c "npm run test-coverage && cat coverage/lcov.info | ./node_modules/.bin/coveralls && rm -rf coverage"
