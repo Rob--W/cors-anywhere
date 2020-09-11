@@ -1,0 +1,22 @@
+name: Docker-Image-CI-stretch
+
+on: [push, pull_request]
+
+jobs:
+
+  build-stretch:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: docker pull node:current-stretch
+      run: docker pull node:current-stretch
+    - name: npm run install
+      run: docker run -w $(pwd) -v $(pwd):$(pwd) node:current-stretch /bin/sh -c "npm install"
+    - name: npm run lint
+      run: docker run -w $(pwd) -v $(pwd):$(pwd) node:current-stretch /bin/sh -c "npm run lint"
+    - name: npm run test
+      run: docker run -w $(pwd) -v $(pwd):$(pwd) node:current-stretch /bin/sh -c "npm run test"
+    - name: npm run test-coverage
+      run: docker run -w $(pwd) -v $(pwd):$(pwd) node:current-stretch /bin/sh -c "npm run test-coverage && cat coverage/lcov.info | ./node_modules/.bin/coveralls && rm -rf coverage"
