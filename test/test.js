@@ -23,7 +23,7 @@ request.Test.prototype.expectJSON = function(json, done) {
 request.Test.prototype.expectNoHeader = function(header, done) {
   this.expect(function(res) {
     if (header.toLowerCase() in res.headers) {
-      return 'Unexpected header in response: ' + header;
+      return new Error('Unexpected header in response: ' + header);
     }
   });
   return done ? this.end(done) : this;
@@ -934,20 +934,36 @@ describe('Access-Control-Max-Age set', function() {
   });
   after(stopServer);
 
-  it('GET /', function(done) {
+  it('OPTIONS /', function(done) {
+    request(cors_anywhere)
+      .options('/')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect('Access-Control-Max-Age', '600')
+      .expect(200, '', done);
+  });
+
+  it('OPTIONS /example.com', function(done) {
+    request(cors_anywhere)
+      .options('/example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect('Access-Control-Max-Age', '600')
+      .expect(200, '', done);
+  });
+
+  it('GET / no Access-Control-Max-Age on GET', function(done) {
     request(cors_anywhere)
       .get('/')
       .type('text/plain')
       .expect('Access-Control-Allow-Origin', '*')
-      .expect('Access-Control-Max-Age', '600')
+      .expectNoHeader('Access-Control-Max-Age')
       .expect(200, helpText, done);
   });
 
-  it('GET /example.com', function(done) {
+  it('GET /example.com no Access-Control-Max-Age on GET', function(done) {
     request(cors_anywhere)
       .get('/example.com')
       .expect('Access-Control-Allow-Origin', '*')
-      .expect('Access-Control-Max-Age', '600')
+      .expectNoHeader('Access-Control-Max-Age')
       .expect(200, 'Response from example.com', done);
   });
 });
@@ -958,6 +974,22 @@ describe('Access-Control-Max-Age not set', function() {
     cors_anywhere_port = cors_anywhere.listen(0).address().port;
   });
   after(stopServer);
+
+  it('OPTIONS / corsMaxAge disabled', function(done) {
+    request(cors_anywhere)
+      .options('/')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expectNoHeader('Access-Control-Max-Age')
+      .expect(200, '', done);
+  });
+
+  it('OPTIONS /example.com corsMaxAge disabled', function(done) {
+    request(cors_anywhere)
+      .options('/example.com')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expectNoHeader('Access-Control-Max-Age')
+      .expect(200, '', done);
+  });
 
   it('GET /', function(done) {
     request(cors_anywhere)
