@@ -29,9 +29,6 @@ cors_proxy.createServer({
     'cookie',
     'cookie2',
     // Strip Heroku-specific headers
-    'x-heroku-queue-wait-time',
-    'x-heroku-queue-depth',
-    'x-heroku-dynos-in-use',
     'x-request-start',
     'x-request-id',
     'via',
