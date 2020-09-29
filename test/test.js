@@ -620,6 +620,54 @@ describe('originWhitelist', function() {
   });
 });
 
+describe('targetBlacklist', function() {
+  before(function() {
+    cors_anywhere = createServer({
+      targetBlacklist: ['http://example.com'],
+    });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+  });
+  after(stopServer);
+
+  it('GET /http://example.com with denied target http://example.com', function(done) {
+    request(cors_anywhere)
+      .get('/http://example.com/')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(403, done);
+  });
+
+  it('GET /https://example.com with denied target http://example.com', function(done) {
+    request(cors_anywhere)
+      .get('/https://example.com/') // Note: different scheme!
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, done);
+  });
+});
+
+describe('targetWhitelist', function() {
+  before(function() {
+    cors_anywhere = createServer({
+      targetWhitelist: ['http://example.com'],
+    });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+  });
+  after(stopServer);
+
+  it('GET /http://example.com with permitted target http://example.com', function(done) {
+    request(cors_anywhere)
+      .get('/http://example.com/')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(200, done);
+  });
+
+  it('GET /https://example.com with permitted target http://example.com', function(done) {
+    request(cors_anywhere)
+      .get('/https://example.com') // Note: different scheme!
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect(403, done);
+  });
+});
+
 describe('checkRateLimit', function() {
   afterEach(stopServer);
 
