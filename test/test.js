@@ -277,6 +277,7 @@ describe('Basic functionality', function() {
     request(cors_anywhere)
       .options('/')
       .expect('Access-Control-Allow-Origin', '*')
+      .expectNoHeader('access-control-expose-headers')
       .expect(200, '', done);
   });
 
@@ -288,6 +289,7 @@ describe('Basic functionality', function() {
       .expect('Access-Control-Allow-Origin', '*')
       .expect('Access-Control-Allow-Methods', 'DELETE')
       .expect('Access-Control-Allow-Headers', 'X-Tralala')
+      .expectNoHeader('access-control-expose-headers')
       .expect(200, '', done);
   });
 
@@ -297,6 +299,7 @@ describe('Basic functionality', function() {
     request(cors_anywhere)
       .options('//bogus')
       .expect('Access-Control-Allow-Origin', '*')
+      .expectNoHeader('access-control-expose-headers')
       .expect(200, '', done);
   });
 
