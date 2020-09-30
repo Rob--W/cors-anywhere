@@ -54,8 +54,16 @@ function echoheaders(origin) {
 
 nock('http://example.com')
   .persist()
+// replyContentLength() has no effect unless response body is JSON and will get
+// stringified, use defaultReplyHeaders() instead
+// https://github.com/nock/nock/blob/626021770b9b2fa52860c19f6b7a6033d64125e3/lib/interceptor.js#L176
+  .defaultReplyHeaders({
+    'Content-Length': function (req, res, body) {return body.length;},
+  })
   .get('/')
-  .reply(200, 'Response from example.com')
+  .reply(200, 'Response from example.com', {
+    'Content-Type': 'text/plain',
+  })
 
   .post('/echopost')
   .reply(200, function(uri, requestBody) {

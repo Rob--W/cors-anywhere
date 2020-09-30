@@ -103,6 +103,9 @@ describe('Basic functionality', function() {
       .get('/example.com')
       .expect('Access-Control-Allow-Origin', '*')
       .expect('x-request-url', 'http://example.com/')
+      .expect('Content-Length', '25')
+      .expectHeaderNotMatch('access-control-expose-headers', /content-length/)
+      .expectHeaderNotMatch('access-control-expose-headers', /content-type/)
       .expectHeaderNotMatch('access-control-expose-headers', /access-control-allow-origin/)
       .expect(200, 'Response from example.com', done);
   });
