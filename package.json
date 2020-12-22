@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "coveralls": "^2.11.6",
-    "eslint": ">=4.18.2",
+    "eslint": "^2.2.0",
     "istanbul": "^0.4.2",
     "lolex": "^1.5.0",
     "mocha": "^3.4.2",
