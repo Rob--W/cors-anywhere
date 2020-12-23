@@ -42,6 +42,7 @@ describe('Basic functionality', function() {
   before(function() {
     cors_anywhere = createServer();
     cors_anywhere_port = cors_anywhere.listen(0).address().port;
+    proxy_url = '127.0.0.1:' + cors_anywhere_port;
   });
   after(stopServer);
 
@@ -309,6 +310,7 @@ describe('Basic functionality', function() {
         host: 'example.com',
         'x-forwarded-port': String(cors_anywhere_port),
         'x-forwarded-proto': 'http',
+        'x-forwarded-host': String(proxy_url)
       }, done);
   });
 
@@ -321,6 +323,7 @@ describe('Basic functionality', function() {
         host: 'example.com:1337',
         'x-forwarded-port': String(cors_anywhere_port),
         'x-forwarded-proto': 'http',
+        'x-forwarded-host': String(proxy_url)
       }, done);
   });
 
@@ -333,6 +336,7 @@ describe('Basic functionality', function() {
         host: 'example.com',
         'x-forwarded-port': String(cors_anywhere_port),
         'x-forwarded-proto': 'http',
+        'x-forwarded-host': String(proxy_url)
       }, done);
   });
 
@@ -504,6 +508,7 @@ describe('server on https', function() {
       },
     });
     cors_anywhere_port = cors_anywhere.listen(0).address().port;
+    proxy_url = '127.0.0.1:' + cors_anywhere_port;
     // Disable certificate validation in case the certificate expires.
     NODE_TLS_REJECT_UNAUTHORIZED = process.env.NODE_TLS_REJECT_UNAUTHORIZED;
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
@@ -526,6 +531,7 @@ describe('server on https', function() {
         host: 'example.com',
         'x-forwarded-port': String(cors_anywhere_port),
         'x-forwarded-proto': 'https',
+        'x-forwarded-host': String(proxy_url)
       }, done);
   });
 
@@ -538,6 +544,7 @@ describe('server on https', function() {
         host: 'example.com',
         'x-forwarded-port': String(cors_anywhere_port),
         'x-forwarded-proto': 'https',
+        'x-forwarded-host': String(proxy_url)
       }, done);
   });
 
@@ -550,6 +557,7 @@ describe('server on https', function() {
         host: 'example.com:1337',
         'x-forwarded-port': String(cors_anywhere_port),
         'x-forwarded-proto': 'https',
+        'x-forwarded-host': String(proxy_url)
       }, done);
   });
 });
