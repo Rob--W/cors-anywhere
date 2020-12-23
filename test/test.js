@@ -31,6 +31,8 @@ request.Test.prototype.expectNoHeader = function(header, done) {
 
 var cors_anywhere;
 var cors_anywhere_port;
+var proxy_url;
+
 function stopServer(done) {
   cors_anywhere.close(function() {
     done();
@@ -310,7 +312,7 @@ describe('Basic functionality', function() {
         host: 'example.com',
         'x-forwarded-port': String(cors_anywhere_port),
         'x-forwarded-proto': 'http',
-        'x-forwarded-host': String(proxy_url)
+        'x-forwarded-host': String(proxy_url),
       }, done);
   });
 
@@ -323,7 +325,7 @@ describe('Basic functionality', function() {
         host: 'example.com:1337',
         'x-forwarded-port': String(cors_anywhere_port),
         'x-forwarded-proto': 'http',
-        'x-forwarded-host': String(proxy_url)
+        'x-forwarded-host': String(proxy_url),
       }, done);
   });
 
@@ -336,7 +338,7 @@ describe('Basic functionality', function() {
         host: 'example.com',
         'x-forwarded-port': String(cors_anywhere_port),
         'x-forwarded-proto': 'http',
-        'x-forwarded-host': String(proxy_url)
+        'x-forwarded-host': String(proxy_url),
       }, done);
   });
 
@@ -531,7 +533,7 @@ describe('server on https', function() {
         host: 'example.com',
         'x-forwarded-port': String(cors_anywhere_port),
         'x-forwarded-proto': 'https',
-        'x-forwarded-host': String(proxy_url)
+        'x-forwarded-host': String(proxy_url),
       }, done);
   });
 
@@ -544,7 +546,7 @@ describe('server on https', function() {
         host: 'example.com',
         'x-forwarded-port': String(cors_anywhere_port),
         'x-forwarded-proto': 'https',
-        'x-forwarded-host': String(proxy_url)
+        'x-forwarded-host': String(proxy_url),
       }, done);
   });
 
@@ -557,7 +559,7 @@ describe('server on https', function() {
         host: 'example.com:1337',
         'x-forwarded-port': String(cors_anywhere_port),
         'x-forwarded-proto': 'https',
-        'x-forwarded-host': String(proxy_url)
+        'x-forwarded-host': String(proxy_url),
       }, done);
   });
 });
