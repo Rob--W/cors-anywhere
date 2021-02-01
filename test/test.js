@@ -620,6 +620,53 @@ describe('originWhitelist', function() {
   });
 });
 
+describe('handleInitialRequest', function() {
+  afterEach(stopServer);
+
+  it('GET / with handleInitialRequest', function(done) {
+    cors_anywhere = createServer({
+      handleInitialRequest: function(req, res, location) {
+        res.writeHead(419);
+        res.end('res:' + (location && location.href));
+        return true;
+      },
+    });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+    request(cors_anywhere)
+      .get('/')
+      .expect(419, 'res:null', done);
+  });
+
+  it('GET /dummy with handleInitialRequest', function(done) {
+    cors_anywhere = createServer({
+      handleInitialRequest: function(req, res, location) {
+        res.writeHead(419);
+        res.end('res:' + (location && location.href));
+        return true;
+      },
+    });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+    request(cors_anywhere)
+      .get('/dummy')
+      .expect(419, 'res:http://dummy/', done);
+  });
+
+  it('GET /example.com with handleInitialRequest', function(done) {
+    cors_anywhere = createServer({
+      handleInitialRequest: function(req, res, location) {
+        res.setHeader('X-Extra-Header', 'hello ' + location.href);
+      },
+    });
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+    request(cors_anywhere)
+      .get('/example.com')
+      .set('Origin', 'null')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect('X-Extra-Header', 'hello http://example.com/')
+      .expect(200, 'Response from example.com', done);
+  });
+});
+
 describe('checkRateLimit', function() {
   afterEach(stopServer);
 

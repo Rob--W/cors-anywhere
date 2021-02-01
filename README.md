@@ -95,6 +95,9 @@ proxy requests. The following options are supported:
 * array of strings `originWhitelist` - If set, requests whose origin is not listed are blocked.  
   If this list is empty, all origins are allowed.
   Example: `['https://good.example.com', 'http://good.example.com']`
+* function `handleInitialRequest` - If set, it is called with the request, response and a parsed
+  URL of the requested destination (null if unavailable). If the function returns true, the request
+  will not be handled further. It is the responsibility of the function to handle the request.
 * function `checkRateLimit` - If set, it is called with the origin (string) of the request. If this
   function returns a non-empty string, the request is rejected and the string is send to the client.
 * boolean `redirectSameOrigin` - If true, requests to URLs from the same origin will not be proxied but redirected.
