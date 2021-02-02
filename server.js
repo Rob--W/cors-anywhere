@@ -9,6 +9,7 @@ var port = process.env.PORT || 8080;
 // use originWhitelist instead.
 var originBlacklist = parseEnvList(process.env.CORSANYWHERE_BLACKLIST);
 var originWhitelist = parseEnvList(process.env.CORSANYWHERE_WHITELIST);
+var rewriteURL = parseEnvList(process.env.REWRITE_URL);
 function parseEnvList(env) {
   if (!env) {
     return [];
@@ -23,6 +24,7 @@ var cors_proxy = require('./lib/cors-anywhere');
 cors_proxy.createServer({
   originBlacklist: originBlacklist,
   originWhitelist: originWhitelist,
+  rewriteURL: rewriteURL,
   checkRateLimit: checkRateLimit,
   removeHeaders: [
     'cookie',

@@ -30,6 +30,7 @@ ingress:
 env:
   PORT: 8080
   CORSANYWHERE_WHITELIST: https://rightmove.co.uk
+  REWRITE_URL: /v0/cors-anywhere
 
 resources:
   limits:
