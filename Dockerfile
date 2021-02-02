@@ -5,6 +5,6 @@ ADD ./lib ./lib
 ADD server.js .
 ENV PORT=8080
 ENV REWRITE_URL=/v0/cors-anywhere
-ENV CORSANYWHERE_WHITELIST
+ENV CORSANYWHERE_WHITELIST=""
 CMD ["node", "server.js"]
 
