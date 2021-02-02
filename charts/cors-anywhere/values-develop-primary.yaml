@@ -1,0 +1,48 @@
+replicaCount: 1
+priorityClassName: dev-priority
+
+image:
+  repository: eu.gcr.io/platform-v2-project/cors_anywhere
+  tag: develop-latest
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/enable-cors: "false"
+    nginx.ingress.kubernetes.io/auth-url: http://auth-api-service.development.svc.cluster.local/v0/internal-validate
+    nginx.ingress.kubernetes.io/auth-response-headers: "Security-Context"
+  hosts:
+    - host: api.futurewayhome.co.uk
+      paths:
+        - /v0/cors-anywhere
+
+  tls:
+    - hosts:
+        - api.futurewayhome.co.uk
+      secretName: tls-wildcard-futurewayhome
+
+env:
+  PORT: 8080
+  CORSANYWHERE_WHITELIST: https://rightmove.co.uk
+
+resources:
+  limits:
+    cpu: 300m
+    memory: 120Mi
+  requests:
+    cpu: 100m
+    memory: 50Mi
+
+worker_resources:
+  limits:
+    cpu: 300m
+    memory: 120Mi
+  requests:
+    cpu: 100m
+    memory: 50Mi
