@@ -1,0 +1,33 @@
+{
+    "name": "CORS Anywhere",
+    "description": "Setup a proxy which allows permissive CORS headers to be added to upstream API responses",
+    "env": {
+      "NODE_TLS_REJECT_UNAUTHORIZED": {
+        "value": "",
+        "required": false
+      },
+      "CORSANYWHERE_BLOCKLIST": {
+        "description": "Block-list of domains, comma-separated.",
+        "value": "",
+        "required": false
+      },
+      "CORSANYWHERE_ALLOWLIST": {
+        "description": "Allow-list of domains; comma-separated.",
+        "value": "",
+        "required": false
+      },
+      "CORSANYWHERE_RATELIMIT": {
+        "description": "If you run an open proxy, you will be violating Heroku terms. Rate-limiting can help mitigate this.",
+        "value": "",
+        "required": false
+      },
+      "NODE_ENV": "production",
+      "NPM_CONFIG_PRODUCTION": {
+        "description": "Must be false or npm will not install devDependencies",
+        "value": "false"
+      }
+    },
+    "buildpacks": [
+      { "url": "https://github.com/heroku/heroku-buildpack-nodejs" }
+    ]
+  }
