@@ -1,6 +1,8 @@
 [![Build Status](https://travis-ci.org/Rob--W/cors-anywhere.svg?branch=master)](https://travis-ci.org/Rob--W/cors-anywhere)
 [![Coverage Status](https://coveralls.io/repos/github/Rob--W/cors-anywhere/badge.svg?branch=master)](https://coveralls.io/github/Rob--W/cors-anywhere?branch=master)
 
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://dashboard.heroku.com/new?template=https%3A%2F%2Fgithub.com%2FLewiscowles1986%2Fcors-anywhere%2Ftree%2Ffeature%2Fheroku-one-click-deploy)
+
 **CORS Anywhere** is a NodeJS proxy which adds CORS headers to the proxied request.
 
 The url to proxy is literally taken from the path, validated and proxied. The protocol
