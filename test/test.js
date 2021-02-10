@@ -554,10 +554,10 @@ describe('server on https', function() {
   });
 });
 
-describe('originBLOCKLIST', function() {
+describe('originBlockList', function() {
   before(function() {
     cors_anywhere = createServer({
-      originBLOCKLIST: ['http://denied.origin.test'],
+      originBlockList: ['http://denied.origin.test'],
     });
     cors_anywhere_port = cors_anywhere.listen(0).address().port;
   });
@@ -587,10 +587,10 @@ describe('originBLOCKLIST', function() {
   });
 });
 
-describe('originALLOWLIST', function() {
+describe('originAllowList', function() {
   before(function() {
     cors_anywhere = createServer({
-      originALLOWLIST: ['https://permitted.origin.test'],
+      originAllowList: ['https://permitted.origin.test'],
     });
     cors_anywhere_port = cors_anywhere.listen(0).address().port;
   });

@@ -22,7 +22,7 @@ var port = process.env.PORT || 8080;
 
 var cors_proxy = require('cors-anywhere');
 cors_proxy.createServer({
-    originALLOWLIST: [], // Allow all origins
+    originAllowList: [], // Allow all origins
     requireHeader: ['origin', 'x-requested-with'],
     removeHeaders: ['cookie', 'cookie2']
 }).listen(port, host, function() {
@@ -90,9 +90,9 @@ proxy requests. The following options are supported:
   If the return value is void, a direct request is sent. The default implementation is
   [`proxy-from-env`](https://github.com/Rob--W/proxy-from-env), which respects the standard proxy
   environment variables (e.g. `https_proxy`, `no_proxy`, etc.).  
-* array of strings `originBLOCKLIST` - If set, requests whose origin is listed are blocked.  
+* array of strings `originBlockList` - If set, requests whose origin is listed are blocked.  
   Example: `['https://bad.example.com', 'http://bad.example.com']`
-* array of strings `originALLOWLIST` - If set, requests whose origin is not listed are blocked.  
+* array of strings `originAllowList` - If set, requests whose origin is not listed are blocked.  
   If this list is empty, all origins are allowed.
   Example: `['https://good.example.com', 'http://good.example.com']`
 * function `checkRateLimit` - If set, it is called with the origin (string) of the request. If this
