@@ -6,9 +6,9 @@ var port = process.env.PORT || 8080;
 // Grab the BLOCKLIST from the command-line so that we can update the BLOCKLIST without deploying
 // again. CORS Anywhere is open by design, and this BLOCKLIST is not used, except for countering
 // immediate abuse (e.g. denial of service). If you want to block all origins except for some,
-// use originWhitelist instead.
+// use originALLOWLIST instead.
 var originBLOCKLIST = parseEnvList(process.env.CORSANYWHERE_BLOCKLIST);
-var originWhitelist = parseEnvList(process.env.CORSANYWHERE_WHITELIST);
+var originALLOWLIST = parseEnvList(process.env.CORSANYWHERE_ALLOWLIST);
 function parseEnvList(env) {
   if (!env) {
     return [];
@@ -22,7 +22,7 @@ var checkRateLimit = require('./lib/rate-limit')(process.env.CORSANYWHERE_RATELI
 var cors_proxy = require('./lib/cors-anywhere');
 cors_proxy.createServer({
   originBLOCKLIST: originBLOCKLIST,
-  originWhitelist: originWhitelist,
+  originALLOWLIST: originALLOWLIST,
   requireHeader: ['origin', 'x-requested-with'],
   checkRateLimit: checkRateLimit,
   removeHeaders: [

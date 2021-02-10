@@ -22,7 +22,7 @@ var port = process.env.PORT || 8080;
 
 var cors_proxy = require('cors-anywhere');
 cors_proxy.createServer({
-    originWhitelist: [], // Allow all origins
+    originALLOWLIST: [], // Allow all origins
     requireHeader: ['origin', 'x-requested-with'],
     removeHeaders: ['cookie', 'cookie2']
 }).listen(port, host, function() {
@@ -92,7 +92,7 @@ proxy requests. The following options are supported:
   environment variables (e.g. `https_proxy`, `no_proxy`, etc.).  
 * array of strings `originBLOCKLIST` - If set, requests whose origin is listed are blocked.  
   Example: `['https://bad.example.com', 'http://bad.example.com']`
-* array of strings `originWhitelist` - If set, requests whose origin is not listed are blocked.  
+* array of strings `originALLOWLIST` - If set, requests whose origin is not listed are blocked.  
   If this list is empty, all origins are allowed.
   Example: `['https://good.example.com', 'http://good.example.com']`
 * function `checkRateLimit` - If set, it is called with the origin (string) of the request. If this
@@ -128,23 +128,23 @@ see the sample code in [test/test-examples.js](test/test-examples.js).
 A public demo of CORS Anywhere is available at https://cors-anywhere.herokuapp.com. This server is
 only provided so that you can easily and quickly try out CORS Anywhere. To ensure that the service
 stays available to everyone, the number of requests per period is limited, except for requests from
-some explicitly whitelisted origins.
+some explicitly ALLOWLISTed origins.
 
 If you expect lots of traffic, please host your own instance of CORS Anywhere, and make sure that
-the CORS Anywhere server only whitelists your site to prevent others from using your instance of
+the CORS Anywhere server only ALLOWLISTs your site to prevent others from using your instance of
 CORS Anywhere as an open proxy.
 
 For instance, to run a CORS Anywhere server that accepts any request from some example.com sites on
 port 8080, use:
 ```
 export PORT=8080
-export CORSANYWHERE_WHITELIST=https://example.com,http://example.com,http://example.com:8080
+export CORSANYWHERE_ALLOWLIST=https://example.com,http://example.com,http://example.com:8080
 node server.js
 ```
 
 This application can immediately be run on Heroku, see https://devcenter.heroku.com/articles/nodejs
 for instructions. Note that their [Acceptable Use Policy](https://www.heroku.com/policy/aup) forbids
-the use of Heroku for operating an open proxy, so make sure that you either enforce a whitelist as
+the use of Heroku for operating an open proxy, so make sure that you either enforce a ALLOWLIST as
 shown above, or severly rate-limit the number of requests.
 
 For example, to BLOCKLIST abuse.example.com and rate-limit everything to 50 requests per 3 minutes,
