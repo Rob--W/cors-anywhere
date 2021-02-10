@@ -554,10 +554,10 @@ describe('server on https', function() {
   });
 });
 
-describe('originBlacklist', function() {
+describe('originBLOCKLIST', function() {
   before(function() {
     cors_anywhere = createServer({
-      originBlacklist: ['http://denied.origin.test'],
+      originBLOCKLIST: ['http://denied.origin.test'],
     });
     cors_anywhere_port = cors_anywhere.listen(0).address().port;
   });

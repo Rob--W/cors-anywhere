@@ -90,7 +90,7 @@ proxy requests. The following options are supported:
   If the return value is void, a direct request is sent. The default implementation is
   [`proxy-from-env`](https://github.com/Rob--W/proxy-from-env), which respects the standard proxy
   environment variables (e.g. `https_proxy`, `no_proxy`, etc.).  
-* array of strings `originBlacklist` - If set, requests whose origin is listed are blocked.  
+* array of strings `originBLOCKLIST` - If set, requests whose origin is listed are blocked.  
   Example: `['https://bad.example.com', 'http://bad.example.com']`
 * array of strings `originWhitelist` - If set, requests whose origin is not listed are blocked.  
   If this list is empty, all origins are allowed.
@@ -147,12 +147,12 @@ for instructions. Note that their [Acceptable Use Policy](https://www.heroku.com
 the use of Heroku for operating an open proxy, so make sure that you either enforce a whitelist as
 shown above, or severly rate-limit the number of requests.
 
-For example, to blacklist abuse.example.com and rate-limit everything to 50 requests per 3 minutes,
+For example, to BLOCKLIST abuse.example.com and rate-limit everything to 50 requests per 3 minutes,
 except for my.example.com and my2.example.com (which may be unlimited), use:
 
 ```
 export PORT=8080
-export CORSANYWHERE_BLACKLIST=https://abuse.example.com,http://abuse.example.com
+export CORSANYWHERE_BLOCKLIST=https://abuse.example.com,http://abuse.example.com
 export CORSANYWHERE_RATELIMIT='50 3 my.example.com my2.example.com'
 node server.js
 ```
