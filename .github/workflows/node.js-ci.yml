@@ -23,7 +23,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: Restore vendor dependencies
-      run: npm install
+      run: npm ci
     - name: Lint files
       run: npm run lint
     - name: Run all tests
