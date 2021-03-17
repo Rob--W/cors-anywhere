@@ -50,6 +50,9 @@ Live examples:
 To use the API, just prefix the URL with the API URL. Take a look at [demo.html](demo.html) for an example.
 A concise summary of the documentation is provided at [lib/help.txt](lib/help.txt).
 
+**Note: as of February 2021, access to the demo server requires an opt-in**,
+see: https://github.com/Rob--W/cors-anywhere/issues/301
+
 If you want to automatically enable cross-domain requests when needed, use the following snippet:
 
 ```javascript
@@ -134,6 +137,9 @@ only provided so that you can easily and quickly try out CORS Anywhere. To ensur
 stays available to everyone, the number of requests per period is limited, except for requests from
 some explicitly whitelisted origins.
 
+**Note: as of February 2021, access to the demo server requires an opt-in**,
+see: https://github.com/Rob--W/cors-anywhere/issues/301
+
 If you expect lots of traffic, please host your own instance of CORS Anywhere, and make sure that
 the CORS Anywhere server only whitelists your site to prevent others from using your instance of
 CORS Anywhere as an open proxy.
@@ -164,7 +170,7 @@ node server.js
 
 ## License
 
-Copyright (C) 2013 - 2016 Rob Wu <rob@robwu.nl>
+Copyright (C) 2013 - 2021 Rob Wu <rob@robwu.nl>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
