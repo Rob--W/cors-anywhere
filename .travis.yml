@@ -11,6 +11,12 @@ node_js:
   - 13
   - 13
   - 14
+jobs:
+  include:
+    - os: linux
+      dist: xenial
+    - os: linux
+      dist: focal
 script:
   - npm run lint
   - npm run test
