@@ -5,6 +5,7 @@ var createServer = require('../').createServer;
 var request = require('supertest');
 var path = require('path');
 var http = require('http');
+var https = require('https');
 var fs = require('fs');
 var assert = require('assert');
 
@@ -551,6 +552,81 @@ describe('server on https', function() {
         'x-forwarded-port': String(cors_anywhere_port),
         'x-forwarded-proto': 'https',
       }, done);
+  });
+});
+
+describe('NODE_TLS_REJECT_UNAUTHORIZED', function() {
+  var NODE_TLS_REJECT_UNAUTHORIZED;
+  var bad_https_server;
+  var bad_https_server_port;
+
+  before(function() {
+    cors_anywhere = createServer({});
+    cors_anywhere_port = cors_anywhere.listen(0).address().port;
+  });
+  after(function(done) {
+    stopServer(done);
+  });
+
+  before(function() {
+    bad_https_server = https.createServer({
+      // rejectUnauthorized: false,
+      key: fs.readFileSync(path.join(__dirname, 'key.pem')),
+      cert: fs.readFileSync(path.join(__dirname, 'cert.pem')),
+    }, function(req, res) {
+      res.end('Response from server with expired cert');
+    });
+    bad_https_server_port = bad_https_server.listen(0).address().port;
+
+    NODE_TLS_REJECT_UNAUTHORIZED = process.env.NODE_TLS_REJECT_UNAUTHORIZED;
+  });
+  after(function(done) {
+    if (NODE_TLS_REJECT_UNAUTHORIZED === undefined) {
+      delete process.env.NODE_TLS_REJECT_UNAUTHORIZED;
+    } else {
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = NODE_TLS_REJECT_UNAUTHORIZED;
+    }
+    bad_https_server.close(function() {
+      done();
+    });
+  });
+
+  it('respects certificate errors by default', function(done) {
+    // Test is expected to run without NODE_TLS_REJECT_UNAUTHORIZED=0
+    request(cors_anywhere)
+      .get('/https://127.0.0.1:' + bad_https_server_port)
+      .set('test-include-xfwd', '')
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect('Not found because of proxy error: Error: certificate has expired', done);
+  });
+
+  it('ignore certificate errors via NODE_TLS_REJECT_UNAUTHORIZED=0', function(done) {
+    stopServer(function() {
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+      cors_anywhere = createServer({});
+      cors_anywhere_port = cors_anywhere.listen(0).address().port;
+      request(cors_anywhere)
+        .get('/https://127.0.0.1:' + bad_https_server_port)
+        .set('test-include-xfwd', '')
+        .expect('Access-Control-Allow-Origin', '*')
+        .expect('Response from server with expired cert', done);
+    });
+  });
+
+  it('respects certificate errors when httpProxyOptions.secure=true', function(done) {
+    stopServer(function() {
+      cors_anywhere = createServer({
+        httpProxyOptions: {
+          secure: true,
+        },
+      });
+      cors_anywhere_port = cors_anywhere.listen(0).address().port;
+      request(cors_anywhere)
+        .get('/https://127.0.0.1:' + bad_https_server_port)
+        .set('test-include-xfwd', '')
+        .expect('Access-Control-Allow-Origin', '*')
+        .expect('Not found because of proxy error: Error: certificate has expired', done);
+    });
   });
 });
 
