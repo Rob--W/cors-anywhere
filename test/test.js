@@ -141,7 +141,7 @@ describe('Basic functionality', function() {
     request(cors_anywhere)
       .get('/http:/notenoughslashes')
       .expect('Access-Control-Allow-Origin', '*')
-      .expect(200, helpText, done);
+      .expect(400, 'The URL is invalid: two slashes are needed after the http(s):.', done);
   });
 
 
