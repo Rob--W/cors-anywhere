@@ -4,6 +4,7 @@
                         "FROM node:8.7.0-alpine",
                         "COPY ./ /app",
                         "WORKDIR /app",
+                        "RUN npm install && npm cache clean --force",
                         "CMD [ \"node\", \"server.js\" ]"
                     ]
  }
