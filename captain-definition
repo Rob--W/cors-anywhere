@@ -2,6 +2,7 @@
   "schemaVersion": 2,
   "dockerfileLines": [
                         "FROM node:8.7.0-alpine",
+                        "COPY ./ /app",
                         "WORKDIR /app",
                         "CMD [ \"node\", \"server.js\" ]"
                     ]
