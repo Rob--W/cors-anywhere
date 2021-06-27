@@ -43,7 +43,7 @@
   "scripts": {
     "lint": "eslint .",
     "test": "mocha ./test/test*.js --reporter spec",
-    "test-coverage": "nyc npm run test"
+    "test-coverage": "nyc mocha -- test/test.js test/test-ratelimit.js --reporter spec"
   },
   "engines": {
     "node": ">=0.10.0"
