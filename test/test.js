@@ -30,6 +30,17 @@ request.Test.prototype.expectNoHeader = function(header, done) {
   return done ? this.end(done) : this;
 };
 
+request.Test.prototype.expectHeaderNotMatch = function(header, regexp, done) {
+  this.expect(function(res) {
+    var headerVal = res.headers[header.toLowerCase()];
+    if (regexp.test(headerVal)) {
+      return new Error('Header "' + header + '" should not contain "'
+                        + String(regexp) + '" got "' + headerVal + '"');
+    }
+  });
+  return done ? this.end(done) : this;
+};
+
 var cors_anywhere;
 var cors_anywhere_port;
 function stopServer(done) {
@@ -93,6 +104,10 @@ describe('Basic functionality', function() {
       .get('/example.com')
       .expect('Access-Control-Allow-Origin', '*')
       .expect('x-request-url', 'http://example.com/')
+      .expect('Content-Length', '25')
+      .expectHeaderNotMatch('access-control-expose-headers', /content-length/)
+      .expectHeaderNotMatch('access-control-expose-headers', /content-type/)
+      .expectHeaderNotMatch('access-control-expose-headers', /access-control-allow-origin/)
       .expect(200, 'Response from example.com', done);
   });
 
@@ -278,6 +293,7 @@ describe('Basic functionality', function() {
     request(cors_anywhere)
       .options('/')
       .expect('Access-Control-Allow-Origin', '*')
+      .expectNoHeader('access-control-expose-headers')
       .expect(200, '', done);
   });
 
@@ -289,6 +305,7 @@ describe('Basic functionality', function() {
       .expect('Access-Control-Allow-Origin', '*')
       .expect('Access-Control-Allow-Methods', 'DELETE')
       .expect('Access-Control-Allow-Headers', 'X-Tralala')
+      .expectNoHeader('access-control-expose-headers')
       .expect(200, '', done);
   });
 
@@ -298,6 +315,7 @@ describe('Basic functionality', function() {
     request(cors_anywhere)
       .options('//bogus')
       .expect('Access-Control-Allow-Origin', '*')
+      .expectNoHeader('access-control-expose-headers')
       .expect(200, '', done);
   });
 
