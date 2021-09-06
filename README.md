@@ -3,6 +3,10 @@
 
 **CORS Anywhere** is a NodeJS proxy which adds CORS headers to the proxied request.
 
+A CORS proxy is used to allow access to another site with certain cross-origin headers. If you own the site you are trying to access, simply add the [`Access-Control-Allow-Origin:` header](https://www.w3.org/wiki/CORS_Enabled) to your site. Read [this article](https://medium.com/netscape/hacking-it-out-when-cors-wont-let-you-be-great-35f6206cc646) for more information about CORS.
+
+---
+
 The url to proxy is literally taken from the path, validated and proxied. The protocol
 part of the proxied URI is optional, and defaults to "http". If port 443 is specified,
 the protocol defaults to "https".
