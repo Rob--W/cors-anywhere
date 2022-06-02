@@ -44,7 +44,7 @@
     "lint": "eslint .",
     "test": "mocha ./test/test*.js --reporter spec",
     "test-coverage": "istanbul cover ./node_modules/.bin/_mocha -- test/test.js test/test-ratelimit.js --reporter spec",
-	"example": "node ./lib/example.js"
+    "example": "node ./lib/example.js"
   },
   "engines": {
     "node": ">=0.10.0"
