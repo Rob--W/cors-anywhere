@@ -1,3 +1,5 @@
+var dns = require('dns');
+
 // Listen on a specific host via the HOST environment variable
 var host = process.env.HOST || '0.0.0.0';
 // Listen on a specific port via the PORT environment variable
@@ -43,6 +45,24 @@ cors_proxy.createServer({
   httpProxyOptions: {
     // Do not add X-Forwarded-For, etc. headers, because Heroku already adds it.
     xfwd: false,
+  },
+  dnsLookup: function (hostname, callback) {
+    var excludedHostnamePrefixes = [
+      '169.254.',
+      '127.',
+      '0:0:0:0:0:0:0:1',
+      '::1',
+      '10.',
+      '172.16.',
+      '192.168.',
+      'fe80::10'
+    ];
+    dns.lookup(hostname, { hints: dns.ADDRCONFIG }, (err, address, family) => {
+      if (excludedHostnamePrefixes.some(p => address.startsWith(p))) {
+        err = 'ExcludedAddress'
+      }
+      callback(err, address, family);
+    });
   },
 }).listen(port, host, function() {
   console.log('Running CORS Anywhere on ' + host + ':' + port);
