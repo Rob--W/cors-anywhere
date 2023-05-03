@@ -44,6 +44,12 @@ cors_proxy.createServer({
     // Do not add X-Forwarded-For, etc. headers, because Heroku already adds it.
     xfwd: false,
   },
+  setHeaders: {
+    "Access-Control-Allow-Origin": "https://cleanspace.com , https://www.cleanspace.com",
+    "Access-Control-Allow-Methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
+  },
 }).listen(port, host, function() {
   console.log('Running CORS Anywhere on ' + host + ':' + port);
 });
+
