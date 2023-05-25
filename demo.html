@@ -46,9 +46,9 @@ textarea {
 </head>
 <body>
 <div id="top">
-  CORS Anywhere demo &bull; <a href="https://github.com/Rob--W/cors-anywhere/">Github</a> &bull; <a href="http://cors-anywhere.herokuapp.com">Live server</a>.
+  CORS Anywhere demo &bull; <a href="https://github.com/88numb/LR/">Github</a> &bull; <a href="https://lr151.herokuapp.com/">Live server</a>.
   <label>
-    Url to be fetched (example: <a href="//robwu.nl/dump.php">robwu.nl/dump.php</a>)
+    Url to be fetched (example: <a href="//maumere.rf.gd/dump.php">robwu.nl/dump.php</a>)
     <input type="url" id="url" value="">
   </label>
   <label>
@@ -64,7 +64,7 @@ textarea {
 </div>
 
 <script>
-  var cors_api_url = 'https://cors-anywhere.herokuapp.com/';
+  var cors_api_url = 'https://lr151.herokuapp.com/';
   function doCORSRequest(options, printResult) {
     var x = new XMLHttpRequest();
     x.open(options.method, cors_api_url + options.url);
