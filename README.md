@@ -124,6 +124,9 @@ For advanced users, the following options are also provided.
 * `httpProxyOptions` - Under the hood, [http-proxy](https://github.com/nodejitsu/node-http-proxy)
   is used to proxy requests. Use this option if you really need to pass options
   to http-proxy. The documentation for these options can be found [here](https://github.com/nodejitsu/node-http-proxy#options).
+  * `httpProxyOptions.customListeners` - If set, this function is called with the httpProxy instance
+    as argument. This allows you to register custom event listeners, for example to listen for the
+    `proxyReq` event.
 * `httpsOptions` - If set, a `https.Server` will be created. The given options are passed to the
   [`https.createServer`](https://nodejs.org/api/https.html#https_https_createserver_options_requestlistener) method.
 
